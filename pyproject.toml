@@ -19,7 +19,7 @@ pdf = [
 ]
 test = [
     "pytest==9.0.3",
-    "hypothesis==6.103.2",
+    "hypothesis==6.167.0",
 ]
 
 [project.scripts]
