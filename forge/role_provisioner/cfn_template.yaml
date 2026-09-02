@@ -1,0 +1,273 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  FORGE 2.3 Assessment Role — least-privilege, zero-parameter same-account deployment.
+  Grants only the specific read-only actions used by the FORGE assessment pipeline.
+
+Resources:
+  ForgeAssessmentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: FORGE-Assessment-Role
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
+            Action: "sts:AssumeRole"
+            Condition:
+              StringLike:
+                "aws:RequestTag/forge-skill": "*"
+      Policies:
+        - PolicyName: ForgeReadOnlyAssessment
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              # ─────────────────────────────────────────────────────────────
+              # P1: Agent Access & Discovery
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P1GlueCatalogRead
+                Effect: Allow
+                Action:
+                  - "glue:GetDatabases"
+                  - "glue:GetDatabase"
+                  - "glue:GetTables"
+                  - "glue:GetTable"
+                  - "glue:GetCrawlers"
+                  - "glue:GetCrawler"
+                Resource: "*"
+
+              - Sid: P1LakeFormationRead
+                Effect: Allow
+                Action:
+                  - "lakeformation:ListResources"
+                  - "lakeformation:GetDataLakeSettings"
+                  - "lakeformation:ListPermissions"
+                  - "lakeformation:ListLFTags"
+                Resource: "*"
+
+              - Sid: P1LambdaListFunctions
+                Effect: Allow
+                Action:
+                  - "lambda:ListFunctions"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P2: Semantic Context & Retrieval
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P2S3ListBuckets
+                Effect: Allow
+                Action:
+                  - "s3:ListAllMyBuckets"
+                  - "s3:ListBucket"
+                Resource: "*"
+
+              - Sid: P2BedrockRead
+                Effect: Allow
+                Action:
+                  - "bedrock:ListFoundationModels"
+                  - "bedrock:GetFoundationModel"
+                  - "bedrock-agent:ListKnowledgeBases"
+                  - "bedrock-agent:GetKnowledgeBase"
+                  - "bedrock-agent:ListAgents"
+                  - "bedrock-agent:GetAgent"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P3: Data Lineage & Provenance
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P3NeptuneDescribe
+                Effect: Allow
+                Action:
+                  - "neptune:DescribeDBClusters"
+                  - "neptune:DescribeDBInstances"
+                Resource: "*"
+
+              - Sid: P3OpenSearchRead
+                Effect: Allow
+                Action:
+                  - "es:ListDomainNames"
+                  - "es:DescribeDomains"
+                  - "es:DescribeDomain"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P4: Data Quality & Classification
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P4MacieRead
+                Effect: Allow
+                Action:
+                  - "macie2:GetMacieSession"
+                  - "macie2:ListClassificationJobs"
+                  - "macie2:ListFindings"
+                Resource: "*"
+
+              - Sid: P4DynamoDBMetadata
+                Effect: Allow
+                Action:
+                  - "dynamodb:ListTables"
+                  - "dynamodb:DescribeTable"
+                  - "dynamodb:ListTagsOfResource"
+                Resource: "*"
+
+              - Sid: P4RDSMetadata
+                Effect: Allow
+                Action:
+                  - "rds:DescribeDBInstances"
+                  - "rds:DescribeDBClusters"
+                  - "rds:ListTagsForResource"
+                Resource: "*"
+
+              - Sid: P4RedshiftMetadata
+                Effect: Allow
+                Action:
+                  - "redshift:DescribeClusters"
+                  - "redshift:DescribeClusterParameters"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P5: Access Control, Identity & Tenancy
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P5IAMRead
+                Effect: Allow
+                Action:
+                  - "iam:ListRoles"
+                  - "iam:ListPolicies"
+                  - "iam:GetRole"
+                  - "iam:GetPolicy"
+                  - "iam:GetPolicyVersion"
+                  - "iam:ListRolePolicies"
+                  - "iam:ListAttachedRolePolicies"
+                Resource: "*"
+
+              - Sid: P5CognitoRead
+                Effect: Allow
+                Action:
+                  - "cognito-idp:ListUserPools"
+                  - "cognito-idp:DescribeUserPool"
+                Resource: "*"
+
+              - Sid: P5AccessAnalyzerRead
+                Effect: Allow
+                Action:
+                  - "access-analyzer:ListAnalyzers"
+                  - "access-analyzer:ListFindings"
+                Resource: "*"
+
+              - Sid: P5OrganizationsRead
+                Effect: Allow
+                Action:
+                  - "organizations:ListAccounts"
+                  - "organizations:DescribeOrganization"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P6: Observability & Audit
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P6CloudTrailRead
+                Effect: Allow
+                Action:
+                  - "cloudtrail:DescribeTrails"
+                  - "cloudtrail:GetTrailStatus"
+                  - "cloudtrail:LookupEvents"
+                Resource: "*"
+
+              - Sid: P6ConfigRead
+                Effect: Allow
+                Action:
+                  - "config:DescribeConfigRules"
+                  - "config:DescribeComplianceByConfigRule"
+                Resource: "*"
+
+              - Sid: P6CloudWatchRead
+                Effect: Allow
+                Action:
+                  - "cloudwatch:DescribeAlarms"
+                  - "cloudwatch:ListMetrics"
+                  - "cloudwatch:GetMetricData"
+                  - "logs:DescribeLogGroups"
+                  - "logs:DescribeMetricFilters"
+                Resource: "*"
+
+              - Sid: P6XRayRead
+                Effect: Allow
+                Action:
+                  - "xray:GetGroups"
+                  - "xray:GetSamplingRules"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P7: Real-Time Freshness & Zero-ETL
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P7StreamingRead
+                Effect: Allow
+                Action:
+                  - "kinesis:ListStreams"
+                  - "kinesis:DescribeStream"
+                  - "kafka:ListClustersV2"
+                  - "kafka:DescribeClusterV2"
+                  - "events:ListRules"
+                  - "events:DescribeRule"
+                  - "sns:ListTopics"
+                  - "sns:GetTopicAttributes"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P8: Agent Controllability & Policy
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P8ComputeRead
+                Effect: Allow
+                Action:
+                  - "lambda:GetFunction"
+                  - "lambda:GetPolicy"
+                  - "lambda:ListFunctions"
+                  - "apigateway:GetRestApis"
+                  - "apigateway:GetResources"
+                  - "appsync:ListGraphqlApis"
+                  - "appsync:GetGraphqlApi"
+                Resource: "*"
+
+              - Sid: P8OrchestrationRead
+                Effect: Allow
+                Action:
+                  - "states:ListStateMachines"
+                  - "states:DescribeStateMachine"
+                  - "sagemaker:ListNotebookInstances"
+                  - "sagemaker:ListEndpoints"
+                  - "sagemaker:DescribeEndpoint"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # P9: Decision Lineage & Explainability
+              # ─────────────────────────────────────────────────────────────
+              - Sid: P9AthenaRead
+                Effect: Allow
+                Action:
+                  - "athena:ListWorkGroups"
+                  - "athena:ListDataCatalogs"
+                  - "athena:GetWorkGroup"
+                Resource: "*"
+
+              - Sid: P9CostExplorerRead
+                Effect: Allow
+                Action:
+                  - "ce:GetCostAndUsage"
+                Resource: "*"
+
+              # ─────────────────────────────────────────────────────────────
+              # Shared: CloudFormation stack inspection (P1, P5)
+              # ─────────────────────────────────────────────────────────────
+              - Sid: SharedCloudFormationRead
+                Effect: Allow
+                Action:
+                  - "cloudformation:ListStacks"
+                  - "cloudformation:DescribeStacks"
+                Resource: "*"
+
+Outputs:
+  ForgeAssessmentRoleArn:
+    Description: ARN of the FORGE 2.3 assessment role
+    Value: !GetAtt ForgeAssessmentRole.Arn
+    Export:
+      Name: ForgeAssessmentRoleArn

@@ -1,0 +1,247 @@
+# FORGE Remediation Recommendations
+# Per-criterion remediation guidance with AWS-native and partner solutions.
+# Partners can add their own solutions alongside AWS-native ones.
+#
+# Structure per entry:
+#   criterion: Human-readable name
+#   action: Short remediation action description
+#   aws_solutions: List of AWS service-based remediations
+#   partner_solutions: List of partner product IDs (see partner_solutions.yaml)
+#   effort: low | medium | high
+#   estimated_days: Approximate implementation time
+
+P1.6:
+  criterion: "Catalog covers >80%"
+  action: "Register 80%+ of data assets in the Glue Data Catalog via crawlers or manual table definitions"
+  aws_solutions:
+    - service: "AWS Glue Crawlers"
+      action: "Configure crawlers for all S3 prefixes, RDS databases, and DynamoDB tables"
+    - service: "AWS Lake Formation"
+      action: "Use CreateDatabase/CreateTable to register assets programmatically"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P1.7:
+  criterion: "Catalog descriptions >80%"
+  action: "Add descriptions to 80%+ of Glue catalog tables and columns"
+  aws_solutions:
+    - service: "AWS Glue Data Catalog"
+      action: "Use UpdateTable API to add Description field to table parameters"
+    - service: "Amazon DataZone"
+      action: "Business glossary auto-populates catalog descriptions via metadata forms"
+  partner_solutions: []
+  effort: low
+  estimated_days: 2
+
+P2.1:
+  criterion: "Business glossary exists"
+  action: "Create a business glossary with terms, definitions, and ownership"
+  aws_solutions:
+    - service: "Amazon DataZone"
+      action: "Create a DataZone domain and populate the business glossary"
+    - service: "AWS Glue Data Catalog"
+      action: "Use table/column comments as lightweight glossary entries"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 7
+
+P2.9:
+  criterion: "Column descriptions >50%"
+  action: "Add column-level descriptions to at least 50% of table columns"
+  aws_solutions:
+    - service: "AWS Glue Data Catalog"
+      action: "Update column Comment field via UpdateTable API for each table"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P2.10:
+  criterion: "Data domains defined"
+  action: "Define logical data domains and tag all tables with their domain"
+  aws_solutions:
+    - service: "AWS Lake Formation"
+      action: "Use LF-Tags to create domain-based tag hierarchies"
+    - service: "Amazon DataZone"
+      action: "Create DataZone domains mapping to business units"
+  partner_solutions: []
+  effort: low
+  estimated_days: 3
+
+P3.1:
+  criterion: "Source-to-consumption lineage"
+  action: "Implement end-to-end lineage from source systems to consumption layer"
+  aws_solutions:
+    - service: "Amazon DataZone"
+      action: "Enable lineage tracking for Glue jobs and Athena queries"
+    - service: "AWS Glue"
+      action: "Activate lineage in Glue ETL job configurations"
+  partner_solutions: []
+  effort: high
+  estimated_days: 14
+
+P4.1:
+  criterion: "Quality rules defined"
+  action: "Define data quality rules for critical datasets covering completeness, validity, and format"
+  aws_solutions:
+    - service: "AWS Glue Data Quality"
+      action: "Create DQDL rulesets attached to Glue tables"
+    - service: "Amazon DataZone"
+      action: "Attach quality rules as subscription requirements"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P4.7:
+  criterion: "Checks run automatically"
+  action: "Schedule automated data quality checks on all critical datasets"
+  aws_solutions:
+    - service: "AWS Glue Data Quality"
+      action: "Attach rulesets to Glue jobs or use scheduled evaluation runs"
+    - service: "Amazon EventBridge"
+      action: "Trigger DQ evaluation via scheduled EventBridge rules"
+  partner_solutions: []
+  effort: low
+  estimated_days: 2
+
+P4.14:
+  criterion: "PII/PHI detection"
+  action: "Enable automated sensitive data discovery across all data stores"
+  aws_solutions:
+    - service: "Amazon Macie"
+      action: "Enable Macie with automated S3 bucket scanning"
+    - service: "AWS Glue Data Quality"
+      action: "Use DQDL ColumnValues rules with regex patterns for PII detection"
+  partner_solutions: []
+  effort: low
+  estimated_days: 3
+
+P5.1:
+  criterion: "Column-level access"
+  action: "Implement column-level access control on sensitive tables"
+  aws_solutions:
+    - service: "AWS Lake Formation"
+      action: "Grant column-level permissions via LF GrantPermissions API"
+    - service: "Amazon Redshift"
+      action: "Use column-level GRANT statements for Redshift tables"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P5.4:
+  criterion: "Tag-based policies"
+  action: "Implement tag-based access control (TBAC) using LF-Tags"
+  aws_solutions:
+    - service: "AWS Lake Formation"
+      action: "Create LF-Tag taxonomy and assign tag-based permissions"
+    - service: "AWS IAM"
+      action: "Use ABAC policies with resource tags for cross-service access"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 7
+
+P5.6:
+  criterion: "Least-privilege"
+  action: "Ensure all agent roles follow least-privilege with no wildcard permissions"
+  aws_solutions:
+    - service: "AWS IAM Access Analyzer"
+      action: "Run Access Analyzer policy generation to right-size permissions"
+    - service: "AWS IAM"
+      action: "Review and tighten IAM policies, remove unused permissions"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P6.1:
+  criterion: "Agent-to-data logged"
+  action: "Enable logging for all agent-to-data-layer access events"
+  aws_solutions:
+    - service: "AWS CloudTrail"
+      action: "Enable data events for S3, DynamoDB, and Lambda in CloudTrail"
+    - service: "AWS CloudTrail Lake"
+      action: "Create event data store for queryable agent access audit"
+  partner_solutions: []
+  effort: low
+  estimated_days: 2
+
+P6.3:
+  criterion: "Distributed tracing"
+  action: "Implement distributed tracing across the agent execution pipeline"
+  aws_solutions:
+    - service: "AWS X-Ray"
+      action: "Instrument Lambda functions and API Gateway with X-Ray SDK"
+    - service: "Amazon CloudWatch"
+      action: "Use CloudWatch ServiceLens for correlated trace/log/metric view"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P7.2:
+  criterion: "Freshness SLAs"
+  action: "Define and enforce freshness SLAs for all critical datasets"
+  aws_solutions:
+    - service: "AWS Glue Data Quality"
+      action: "Use DataFreshness DQDL rule type with threshold definitions"
+    - service: "Amazon EventBridge"
+      action: "Set up freshness monitoring with EventBridge scheduled checks"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 4
+
+P8.1:
+  criterion: "Content filtering"
+  action: "Enable content filtering guardrails on all agent LLM invocations"
+  aws_solutions:
+    - service: "Amazon Bedrock Guardrails"
+      action: "Create guardrail with content filter policies and attach to agents"
+  partner_solutions: []
+  effort: low
+  estimated_days: 1
+
+P8.9:
+  criterion: "Human approval required"
+  action: "Implement human-in-the-loop approval for high-risk agent actions"
+  aws_solutions:
+    - service: "AWS Step Functions"
+      action: "Add .waitForTaskToken callback pattern for human approval gates"
+    - service: "Amazon Bedrock Agents"
+      action: "Configure returnControl for actions requiring human confirmation"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5
+
+P9.1:
+  criterion: "Reasoning steps recorded"
+  action: "Capture and persist agent reasoning chain for every decision"
+  aws_solutions:
+    - service: "Amazon Bedrock"
+      action: "Enable trace logging to capture CoT reasoning in agent invocations"
+    - service: "Amazon CloudWatch Logs"
+      action: "Ship Bedrock agent traces to CloudWatch for retention and query"
+  partner_solutions: []
+  effort: low
+  estimated_days: 2
+
+P9.2:
+  criterion: "Decision links to sources"
+  action: "Ensure every agent decision references the data sources used"
+  aws_solutions:
+    - service: "Amazon Bedrock"
+      action: "Use citations/attributions in RetrieveAndGenerate responses"
+    - service: "Amazon CloudWatch Logs"
+      action: "Log source document IDs alongside agent trace events"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 4
+
+P9.7:
+  criterion: "Confidence quantified"
+  action: "Quantify and expose confidence scores for agent decisions"
+  aws_solutions:
+    - service: "Amazon Bedrock"
+      action: "Extract confidence metrics from model response metadata"
+    - service: "Amazon CloudWatch"
+      action: "Publish confidence as custom metric for threshold alerting"
+  partner_solutions: []
+  effort: medium
+  estimated_days: 5

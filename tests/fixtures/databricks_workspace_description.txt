@@ -1,0 +1,40 @@
+# Databricks Workspace Architecture Description
+
+## Catalog & Discovery
+Our platform uses Unity Catalog as the central governance layer, accessed via the
+Unity Catalog API / catalog API. We rely on a three-level namespace
+(catalog.schema.table) across all workloads. Schema introspection is performed via
+information_schema and column metadata queries. All data is stored in Delta Lake
+(open format), and we make heavy use of Delta time-travel / version history.
+A shared metastore enables cross-workspace discovery.
+
+## SQL Access
+Analysts query through a serverless SQL Warehouse (SQL endpoint) with a shared metastore.
+
+## Lineage & Provenance
+UC lineage is enabled with lineage tracking across the estate. We capture
+column-level lineage (fine-grained lineage) and expose it via the lineage API
+(programmatic lineage). DLT pipeline lineage / delta live lineage is captured for
+all Delta Live Tables pipelines.
+
+## Data Quality
+We enforce data quality using DLT expectations (delta live expectations / data quality
+rules) on every production pipeline, with schema enforcement active.
+
+## Access Control & Identity
+Access is governed with UC permissions (grant/revoke) at the catalog level. Sensitive
+columns use dynamic masking (column masking) and row-level security (row filters).
+Automated jobs authenticate with a service principal (machine identity), and we enforce
+token management with a strict token policy (PAT restrictions).
+
+## Observability & Audit
+Audit logging is enabled via system tables (audit log). We capture data access logs
+(read/write logs) and use billing tables for cost attribution (spend per workspace).
+DLT pipeline observability / pipeline metrics and MLflow experiment tracking
+(mlflow logging) are monitored on dashboards.
+
+## Real-Time
+Structured streaming powers our real-time ingestion with zero-ETL style pipelines.
+We use streaming tables and real-time pipelines, with change data feed (CDC) enabled
+and incremental processing (micro-batch). Ingestion uses Auto Loader (cloudFiles).
+

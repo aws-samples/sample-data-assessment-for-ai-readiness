@@ -1,0 +1,9 @@
+sku_name,usage_date,usage_quantity,list_cost_usd
+SQL Warehouse,2026-07-01,1240.5,4820.75
+Jobs Compute,2026-07-01,3100.0,6210.40
+DLT Pipelines,2026-07-01,890.2,3120.10
+Model Serving,2026-07-01,410.0,1980.55
+Structured Streaming,2026-07-01,620.7,2415.30
+MLflow Experiments,2026-07-01,150.0,540.00
+Unity Catalog,2026-07-01,0.0,0.00
+System Tables,2026-07-01,0.0,0.00

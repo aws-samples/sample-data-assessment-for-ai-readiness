@@ -1,0 +1,61 @@
+# FORGE Profile Engine — Weight Configuration
+# Partners can override these values without editing Python code.
+# The profile_engine/dimensions.py module loads this file on import;
+# if this file is missing, hardcoded defaults are used.
+
+# Base pillar weights (percentage points, must sum to 100)
+base_weights:
+  P1: 17
+  P2: 17
+  P3: 8
+  P4: 12
+  P5: 11
+  P6: 9
+  P7: 7
+  P8: 10
+  P9: 9
+
+# Shift vectors: percentage-point adjustments per pillar (must be zero-sum per entry)
+shifts:
+  architecture:
+    open_lakehouse: { P1: 0, P2: 0, P3: 0, P4: 0, P5: 0, P6: 0, P7: 0, P8: 0, P9: 0 }
+    saas_native:    { P1: 3, P2: 1, P3: -6, P4: 0, P5: 2, P6: 0, P7: 0, P8: 0, P9: 0 }
+    hybrid:         { P1: 1, P2: 1, P3: -3, P4: 0, P5: 1, P6: 0, P7: 0, P8: 0, P9: 0 }
+
+  workload:
+    rag_retrieval:     { P1: 0, P2: 3, P3: 1, P4: 0, P5: 0, P6: 0, P7: 0, P8: -2, P9: -2 }
+    single_tool:       { P1: 0, P2: 0, P3: 0, P4: 0, P5: 0, P6: 0, P7: 0, P8: 0, P9: 0 }
+    multi_tool_agents: { P1: 1, P2: -2, P3: -2, P4: 0, P5: 2, P6: -2, P7: 0, P8: 3, P9: 0 }
+
+  industry:
+    general:            { P1: 0, P2: 0, P3: 0, P4: 0, P5: 0, P6: 0, P7: 0, P8: 0, P9: 0 }
+    financial_services: { P1: -3, P2: -3, P3: 0, P4: 2, P5: 2, P6: 2, P7: -2, P8: 0, P9: 2 }
+    healthcare:         { P1: -4, P2: -3, P3: 0, P4: 2, P5: 3, P6: 2, P7: -3, P8: 0, P9: 3 }
+
+  agent_maturity:
+    pilot:             { P1: 2, P2: 2, P3: 0, P4: 0, P5: 0, P6: 0, P7: 0, P8: -2, P9: -2 }
+    single_agent_prod: { P1: 0, P2: 0, P3: 0, P4: 0, P5: 0, P6: 0, P7: 0, P8: 0, P9: 0 }
+    multi_agent_prod:  { P1: -3, P2: -3, P3: -3, P4: 0, P5: 1, P6: 2, P7: 0, P8: 3, P9: 3 }
+
+# Floor override tables per dimension
+# Values override the default floor of 25 for specific pillar/dimension combos
+floors:
+  architecture:
+    open_lakehouse: {}
+    saas_native:    {}
+    hybrid:         {}
+
+  workload:
+    rag_retrieval:     {}
+    single_tool:       {}
+    multi_tool_agents: {}
+
+  industry:
+    general:            {}
+    financial_services: { P6: 40, P9: 35 }
+    healthcare:         { P5: 45, P9: 40 }
+
+  agent_maturity:
+    pilot:             {}
+    single_agent_prod: {}
+    multi_agent_prod:  { P8: 40, P9: 35 }

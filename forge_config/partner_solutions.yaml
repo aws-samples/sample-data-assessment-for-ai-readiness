@@ -1,0 +1,103 @@
+# FORGE Partner Solution Catalog
+# Partners register their products here, then reference them in recommendations.yaml.
+#
+# Each solution entry contains:
+#   id: Unique slug used to reference this solution in recommendations.yaml
+#   name: Product display name
+#   vendor: Company name
+#   category: Solution category
+#   applicable_criteria: List of FORGE criteria IDs this product can address
+#   description: Brief description of how the product helps (optional)
+#   integration_notes: AWS integration specifics (optional)
+
+solutions:
+  - id: alation
+    name: "Alation"
+    vendor: "Alation Inc."
+    category: "Data Catalog & Governance"
+    applicable_criteria:
+      - "P1.6"
+      - "P1.7"
+      - "P2.1"
+      - "P2.9"
+      - "P2.10"
+      - "P3.1"
+    description: "Enterprise data catalog with AI-powered metadata curation, business glossary, and lineage tracking"
+    integration_notes: "Integrates with AWS Glue Data Catalog via native connector; syncs descriptions bidirectionally"
+
+  - id: collibra
+    name: "Collibra"
+    vendor: "Collibra NV"
+    category: "Data Governance"
+    applicable_criteria:
+      - "P1.7"
+      - "P2.1"
+      - "P2.9"
+      - "P2.10"
+      - "P3.1"
+      - "P4.1"
+      - "P4.14"
+    description: "Data governance platform with business glossary, data quality rules, classification, and lineage"
+    integration_notes: "AWS Marketplace deployment; integrates with Glue, Redshift, and S3 via JDBC/API connectors"
+
+  - id: databricks-unity-catalog
+    name: "Databricks Unity Catalog"
+    vendor: "Databricks Inc."
+    category: "Unified Data & AI Governance"
+    applicable_criteria:
+      - "P1.6"
+      - "P1.7"
+      - "P1.11"
+      - "P2.9"
+      - "P3.1"
+      - "P3.7"
+      - "P5.1"
+      - "P5.2"
+    description: "Unified governance for data and AI assets with fine-grained access control, lineage, and catalog"
+    integration_notes: "Runs on AWS; supports cross-cloud governance; integrates with Lake Formation via external locations"
+
+  - id: monte-carlo
+    name: "Monte Carlo"
+    vendor: "Monte Carlo Data Inc."
+    category: "Data Observability"
+    applicable_criteria:
+      - "P4.1"
+      - "P4.4"
+      - "P4.7"
+      - "P4.10"
+      - "P7.2"
+      - "P7.10"
+    description: "Data observability platform providing automated anomaly detection, freshness monitoring, and incident management"
+    integration_notes: "Deploys as a data collector in customer VPC; monitors Glue, Redshift, S3, and Athena via read-only access"
+
+  - id: immuta
+    name: "Immuta"
+    vendor: "Immuta Inc."
+    category: "Data Access Control"
+    applicable_criteria:
+      - "P5.1"
+      - "P5.2"
+      - "P5.3"
+      - "P5.4"
+      - "P5.6"
+      - "P5.13"
+      - "P5.14"
+    description: "Automated data access control with policy-as-code, dynamic masking, and purpose-based access"
+    integration_notes: "Native integration with Redshift, Athena, and Databricks on AWS; policy enforcement at query time"
+
+  - id: privacera
+    name: "Privacera"
+    vendor: "Privacera Inc."
+    category: "Data Security & Governance"
+    applicable_criteria:
+      - "P4.14"
+      - "P4.15"
+      - "P5.1"
+      - "P5.2"
+      - "P5.3"
+      - "P5.4"
+      - "P5.6"
+      - "P6.1"
+      - "P6.10"
+    description: "Unified data security platform with centralized access control, sensitive data discovery, and audit"
+    integration_notes: "Available on AWS Marketplace; integrates with EMR, Glue, Athena, Redshift, and S3 via plugins"
