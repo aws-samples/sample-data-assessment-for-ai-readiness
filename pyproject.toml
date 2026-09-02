@@ -6,7 +6,7 @@ requires-python = ">=3.9"
 dependencies = [
     # Pinned to exact versions to reduce supply-chain risk (see docs/FORGE_Threat_Model.md, T6/WI-3).
     # Bump deliberately and re-test; do not use open ranges.
-    "boto3==1.34.131",
+    "boto3==1.43.83",
     "pyyaml==6.0.1",
 ]
 
