@@ -18,7 +18,7 @@ pdf = [
     "pypdf==6.15.0",
 ]
 test = [
-    "pytest==9.0.3",
+    "pytest==9.1.1",
     "hypothesis==6.103.2",
 ]
 
