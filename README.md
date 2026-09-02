@@ -1,12 +1,16 @@
 # FORGE — Data for AI Readiness
 
-## FORGE 2.4 Assessment Workbench
+## FORGE (Foundations for Open, Real-time, Governed Enterprises) 2.4 Assessment Workbench
 
 Continuous diagnostic and improvement framework that scores your data estate readiness for agentic AI workloads. Produces a 0–100 readiness score from criteria across 9 pillars, shaped by a customer-specific FORGE Profile.
+
+![FORGE framework: 3 stacks, 9 pillars](docs/images/FORGE_STACKS.png)
 
 Supports **multi-platform** assessments: AWS (API-based discovery) + Databricks (document-first + conversational), with type-aware merging into a single estate score.
 
 ## Quick Start
+
+![FORGE Assessment Skill workflow: STS AssumeRole → Probe → Collect → Assess → Output](docs/images/SKILL_WORKFLOW.png)
 
 ### Single-Platform (AWS Only)
 
@@ -73,6 +77,12 @@ Reference `#FORGE Databricks Assessment Skill` directly, or let the main skill t
 ```
 FORGE Score = Raw Score(effective_weights) × Coverage Multiplier(effective_floors)
 ```
+
+![Scoring engine: FORGE Score = Raw Score × Coverage Multiplier, with component definitions](docs/images/SCORING_ENGINE.png)
+
+Worked example — a Healthcare SaaS / multi-tool-agents profile where two pillars fall below their floor, triggering a coverage penalty:
+
+![Scoring example: Healthcare SaaS multi-tool agents, P8 and P9 below floor → coverage multiplier 0.92 → 30.5 FOUNDATIONAL](docs/images/SCORING_EXAMPLES.png)
 
 ### Multi-Platform Merge Logic
 
