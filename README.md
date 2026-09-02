@@ -122,13 +122,10 @@ Single-platform assessments produce identical results to pre-multi-platform beha
 ```
 forge-workbench/
 ├── .kiro/
-│   ├── skills/                                ← Kiro Skill definitions (agent instructions)
-│   │   ├── forge-assessment.md                  AWS assessment + multi-platform orchestrator
-│   │   ├── forge-databricks-assessment.md       Databricks document-first skill
-│   │   └── forge-customization.md               Criteria/weight customization
-│   └── specs/                                 ← Spec-driven development artifacts
-│       ├── forge-assessment-v23-upgrade/        v2.3 upgrade spec
-│       └── forge-multi-platform-databricks/     Multi-platform extension spec
+│   └── skills/                                ← Kiro Skill definitions (agent instructions)
+│       ├── forge-assessment.md                  AWS assessment + multi-platform orchestrator
+│       ├── forge-databricks-assessment.md       Databricks document-first skill
+│       └── forge-customization.md               Criteria/weight customization
 │
 ├── forge/                                     ← Core Python package
 │   ├── __main__.py                              CLI entrypoint: `forge profile` + `forge assess`
@@ -213,7 +210,7 @@ forge-workbench/
 │   └── ...                                      (formula, persistence, classifier, etc.)
 │
 ├── docs/
-│   └── FORGE_Multi_Platform_Scoring_Design.md   Multi-platform design document
+│   └── images/                                README diagrams (framework, workflow, scoring)
 │
 ├── forge_config/                              ← Assessment configuration
 │   ├── recommendations.yaml                    Criterion-level remediation guidance
@@ -228,7 +225,7 @@ forge-workbench/
 │   ├── forge_dashboard.html                     AWS-only dashboard
 │   └── forge_estate_dashboard.html              Multi-platform estate dashboard
 │
-├── forge_dashboard_generator.py               ← Legacy single-platform dashboard script
+├── forge_dashboard_generator.py               ← Single-platform dashboard script
 ├── pyproject.toml                             ← Project config (pytest, dependencies)
 └── README.md
 ```
