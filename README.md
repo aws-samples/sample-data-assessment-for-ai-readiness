@@ -1,6 +1,6 @@
 # FORGE — Data for AI Readiness
 
-## FORGE (Foundations for Open, Real-time, Governed Enterprises) 2.4 Assessment Workbench
+## FORGE (Foundations for Open, Real-time, Governed Enterprises) Assessment Workbench
 
 Continuous diagnostic and improvement framework that scores your data estate readiness for agentic AI workloads. Produces a 0–100 readiness score from criteria across 9 pillars, shaped by a customer-specific FORGE Profile.
 
