@@ -15,7 +15,7 @@ dependencies = [
 # Pinned so the parser library + version are explicit and auditable.
 # pypdf 6.15.0 clears all known CVEs (pip-audit, 2026-08-31); do not downgrade.
 pdf = [
-    "pypdf==6.15.0",
+    "pypdf==6.16.2",
 ]
 test = [
     "pytest==9.0.3",
