@@ -227,35 +227,44 @@ forge-workbench/
 
 ## Key Modules Explained
 
-### Platform Segments (`forge/platform_segments/`)
+### Relevance Engine — Service Discovery (`forge/relevance_engine/`)
 
-The abstraction layer that makes multi-platform scoring possible. Each platform produces a `PlatformSegment` independently — then segments are merged.
+The front door of every AWS assessment. Before scoring anything, FORGE discovers what's actually running in the account so it only evaluates relevant criteria.
 
-- **`aws_adapter.py`** — Wraps the existing `ForgeAssessmentResult` (from the AWS collector) into a `PlatformSegment` without modifying the collector. Maps CriterionResult → CriterionSegmentResult with `platform="aws"`.
-- **`databricks_registry.py`** — 57 Databricks-specific criteria across 6 pillars (P1, P3, P4, P5, P6, P7), mapped to 10 Databricks services (Unity Catalog, DLT, SQL Warehouse, MLflow, etc.).
-- **`databricks_segment.py`** — Takes a `SkillConversationState` (filled by the document-first skill) and produces a complete `PlatformSegment` with per-pillar scoring.
+- **`probes.py`** — 30+ concurrent, read-only service probes (S3, Glue, Athena, Lake Formation, Redshift, Bedrock, SageMaker, and more). Each probe issues List/Describe/Get metadata calls to detect whether a service is in use.
+- **`validator.py`** — Corroborates probe results with Cost Explorer spend and CloudTrail activity to produce a confidence signal, reducing false positives from leftover/unused resources.
+- **`classifier.py`** — Turns discovery signals into per-criterion relevance (relevant / not-applicable), so the score reflects the estate you actually run.
 
-### Merge Engine (`forge/scoring_engine/merge.py`)
+### Collector & Pillar Assessors — The Assessment Engine (`forge/collector.py`, `forge/pillar_assessors/`)
 
-The computational core of multi-platform scoring:
+The core engine that turns discovery into a scored assessment.
 
-- `merge_criteria(segments)` — Groups criteria by (pillar, index), applies AND for binary / pooled ratio for analog
-- `compute_estate_score(merged, weights, floors)` — Standard FORGE formula on merged criteria
-- Single-platform pass-through: 1 segment → criteria relabeled to "estate", score identical
+- **`collector.py`** — Pipeline orchestrator. Assumes the read-only role, runs discovery, dispatches the pillar assessors, and assembles the `ForgeAssessmentResult`.
+- **`pillar_assessors/p1.py … p9.py`** — Deep, per-pillar assessment logic. Each pillar evaluates its criteria against the discovered services (e.g., governance, lineage, security, quality) and emits binary/analog criterion results.
+- **`criteria_registry.py`** — The 142 AWS criteria definitions that the assessors evaluate against.
 
-### Document Ingest (`forge/document_ingest/`)
+### Scoring Engine (`forge/scoring_engine/`)
 
-Parses customer-uploaded documents for the Databricks skill:
+The math that converts criterion results into a 0–100 readiness score.
 
-- **`cost_parser.py`** — Reads Databricks `system.billing.usage` CSV exports. Auto-detects columns, maps 37 billing SKU variants to 10 service keys. Also handles PDF (best-effort text extraction).
-- **`config_parser.py`** — Scans architecture docs/configs for 30 regex patterns that map to Databricks criteria. Confidence scores 0.60–0.85 depending on match specificity.
+- **`formula.py`** — `Raw Score(effective_weights) × Coverage Multiplier(effective_floors)` — the core FORGE formula.
+- **`analog.py`** — 0.0–1.0 ratio scoring for partial-credit (analog) criteria.
+- **`bands.py`** — Classifies the final score into a readiness band (UNREADY → FORGE-NATIVE).
 
-### Skill Support (`forge/skill_support/`)
+### Dashboard (`forge/dashboard/`)
 
-Python implementation backing the Kiro skills:
+Turns the assessment result into a self-contained, shareable report.
 
-- **`databricks_skill.py`** — State machine managing the document-first flow (upload → review → follow-up → complete). Includes `score_from_response()` NLP heuristics and the no-document fallback path.
-- **`databricks_questions.py`** — 18 targeted questions (3/pillar × 6 pillars) with keyword lists for response classification. Questions are suppressed when documents already provide evidence.
+- **`generator.py`** — Renders an HTML dashboard with SVG score gauge, per-pillar radar chart, criteria drill-down (with pass/fail attribution), and a prioritized remediation roadmap. No server or external dependencies — just open the HTML.
+- **`trend_visualizer/chart.py`** — Time-series trend fragment sourced from `forge_history.jsonl`, so you can see readiness improve across runs.
+
+### Multi-Platform Extension (`forge/platform_segments/`, `forge/scoring_engine/merge.py`)
+
+Optional layer that lets FORGE score more than just AWS (e.g., Databricks) and combine them into one estate score. Single-platform (AWS-only) assessments are unaffected — this layer is a pass-through when only one platform is present.
+
+- **`platform_segments/aws_adapter.py`** — Wraps the AWS `ForgeAssessmentResult` into a platform-neutral `PlatformSegment` without changing the collector.
+- **`scoring_engine/merge.py`** — Merges criteria across platforms (AND for binary, pooled ratio for analog) and computes the combined estate score.
+- **`document_ingest/`** & **`skill_support/`** — Support the document-first Databricks flow (billing/config parsing and the Kiro skill state machine). Only exercised when a second platform is assessed.
 
 ---
 
