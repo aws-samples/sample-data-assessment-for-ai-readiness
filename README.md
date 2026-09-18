@@ -12,14 +12,29 @@ Supports **multi-platform** assessments: AWS (API-based discovery) + Databricks 
 
 ![FORGE Assessment Skill workflow: STS AssumeRole → Probe → Collect → Assess → Output](docs/images/SKILL_WORKFLOW.png)
 
+### Prerequisites
+
+```bash
+# Clone the repo and cd into it — ALL commands below are run from the repo root
+git clone https://github.com/aws-samples/sample-data-assessment-for-ai-readiness.git
+cd sample-data-assessment-for-ai-readiness
+
+# Install the forge package (this is what makes `python3 -m forge ...` work)
+python3 -m pip install -e .
+```
+
+> **Run every command from the repo root** (the directory containing this `README.md` and the `forge/` package).
+
 ### Single-Platform (AWS Only)
+
+Run these from the repo root:
 
 ```bash
 # 1. Deploy IAM role (one-time)
 aws cloudformation deploy \
   --template-file forge/role_provisioner/cfn_template.yaml \
   --stack-name forge-assessment-role \
-  --capabilities CAPABILITY_IAM
+  --capabilities CAPABILITY_NAMED_IAM
 
 # 2. Declare profile (first run)
 python3 -m forge profile declare \
@@ -37,6 +52,8 @@ open forge_output/forge_dashboard.html
 ```
 
 ### Multi-Platform (AWS + Databricks)
+
+Also run from the repo root:
 
 ```bash
 # After AWS assessment completes, run the estate dashboard script
@@ -356,8 +373,9 @@ python3 -m pytest tests/ --cov=forge --cov-report=term-missing
 - pytest + hypothesis (test extras)
 
 ```bash
-pip install -e .          # runtime deps, pinned
-pip install -e '.[test]'  # + test deps
+# Use `python3 -m pip` (or `pip3`) to match the `python3` interpreter used elsewhere
+python3 -m pip install -e .          # runtime deps, pinned
+python3 -m pip install -e '.[test]'  # + test deps
 ```
 
 ---

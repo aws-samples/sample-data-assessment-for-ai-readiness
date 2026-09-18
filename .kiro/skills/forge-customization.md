@@ -134,7 +134,7 @@ EOF
 aws cloudformation deploy \
   --template-file forge/role_provisioner/cfn_template.yaml \
   --stack-name forge-assessment-role \
-  --capabilities CAPABILITY_IAM
+  --capabilities CAPABILITY_NAMED_IAM
 ```
 
 CloudFormation will update the inline policy in-place. No downtime — the role ARN stays the same.

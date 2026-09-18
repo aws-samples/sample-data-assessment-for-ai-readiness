@@ -98,7 +98,7 @@ Then deploy:
 aws cloudformation deploy \
   --template-file forge/role_provisioner/cfn_template.yaml \
   --stack-name forge-assessment-role \
-  --capabilities CAPABILITY_IAM
+  --capabilities CAPABILITY_NAMED_IAM
 ```
 
 Wait for the stack to complete, then re-check with `get-role` and `assume-role` to confirm.

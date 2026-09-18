@@ -15,7 +15,9 @@ Resources:
           - Effect: Allow
             Principal:
               AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root"
-            Action: "sts:AssumeRole"
+            Action:
+              - "sts:AssumeRole"
+              - "sts:TagSession"
             Condition:
               StringLike:
                 "aws:RequestTag/forge-skill": "*"
