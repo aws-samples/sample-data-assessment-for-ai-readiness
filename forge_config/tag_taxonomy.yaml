@@ -1,0 +1,42 @@
+version: "0.2"
+readiness_vectors:
+  governance: {label: "Governed", desc: "Centralized policy, ownership, auditable control over data access.", forge_letter: "G"}
+  interoperable: {label: "Inter-operable (portable)", desc: "Open/standard interfaces; cross-engine, cross-platform access. A portability signal, not a governance statement.", forge_letter: "O"}
+  open_framework: {label: "Open Framework (portable)", desc: "Open table/format standards (Iceberg, Delta, Postgres/pgvector) chosen for future-proof portability. Independent of how governed the deployment is.", forge_letter: "O"}
+  fine_grained_access_control: {label: "Fine-Grained Access Control", desc: "Row/column/tag-level authorization enforced at query time.", forge_letter: "G"}
+  relevance: {label: "Relevance", desc: "Semantic context, retrieval quality, business glossary coverage.", forge_letter: "F"}
+  ai_only: {label: "AI-Only", desc: "Capability only matters for agentic/AI workloads (MCP, tool interface, decision lineage).", forge_letter: "F"}
+  current: {label: "Current / Real-Time", desc: "Freshness, zero-ETL, real-time data paths.", forge_letter: "R"}
+  reliable: {label: "Reliable", desc: "Data quality, contracts, lineage, provenance, trust signals.", forge_letter: "F"}
+  controllable: {label: "Controllable", desc: "Policy enforcement on agent actions, guardrails, explainability.", forge_letter: "E"}
+tensions:
+  portable_vs_maturity: {label: "Portable vs Maturity", desc: "Open/portable foundations (future-proof, no lock-in) traded against the maturity, depth, and operational richness of the managed capability stack. Using Postgres or an open table format is a portability bet; it says nothing about how governed or mature the deployment is.", renamed_from: "openness_vs_control"}
+  freshness_vs_cost: {label: "Freshness vs Cost", desc: "Real-time/zero-ETL paths traded against compute and storage spend."}
+  autonomy_vs_safety: {label: "Agent Autonomy vs Safety", desc: "Agent action latitude traded against policy enforcement and guardrails."}
+  centralization_vs_federation: {label: "Centralization vs Federation", desc: "Single point of governance traded against distributed/federated access."}
+  coverage_vs_precision: {label: "Coverage vs Precision", desc: "Breadth of catalog/semantics traded against description/retrieval precision."}
+  trust_vs_velocity: {label: "Trust vs Velocity", desc: "Data-quality/contract rigor traded against delivery speed."}
+tco_indicator:
+  scale: [1,2,3,4,5]
+  grounded_by:
+    cost: {type: enum, values: {low: 1, medium: 2, high: 3}}
+    operational_overhead: {type: enum, values: {low: 1, medium: 2, high: 3}}
+    severity: {type: enum, values: {low: 0.8, medium: 1.0, high: 1.3}}
+  formula: "tco = clamp(round(1 + ((cost_pts + overhead_pts) * severity_mult - 1.6) * (4/6.2)), 1, 5)"
+compliance_frameworks:
+  catalog: [GDPR, HIPAA, SOC2, PCI_DSS, FINRA, ISO_27001, FedRAMP, CCPA, DORA, EU_AI_ACT]
+quadrant:
+  default_x_axis: "readiness_score"
+  default_y_axis: "tco"
+  bubble_size: "criteria_count"
+  bubble_color: "compliance_bearing"
+pillars:
+  P1: {name: "Agent Access & Discovery", count: 21, primary_vector: interoperable, secondary: [ai_only, open_framework]}
+  P2: {name: "Semantic Context & Retrieval", count: 17, primary_vector: relevance, secondary: [ai_only]}
+  P3: {name: "Data Lineage & Provenance", count: 14, primary_vector: reliable, secondary: [governance]}
+  P4: {name: "Data Quality, Contracts & Classification", count: 18, primary_vector: reliable, secondary: [governance]}
+  P5: {name: "Access Control, Identity & Tenancy", count: 17, primary_vector: fine_grained_access_control, secondary: [governance]}
+  P6: {name: "Observability & Audit", count: 12, primary_vector: governance, secondary: [reliable]}
+  P7: {name: "Real-Time, Freshness & Zero-ETL", count: 15, primary_vector: current, secondary: [interoperable]}
+  P8: {name: "Agent Controllability & Policy", count: 16, primary_vector: controllable, secondary: [governance, ai_only]}
+  P9: {name: "Decision Lineage & Explainability", count: 12, primary_vector: controllable, secondary: [ai_only, reliable]}
