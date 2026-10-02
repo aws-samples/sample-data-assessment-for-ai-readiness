@@ -70,6 +70,17 @@ class CriterionDefinition:
     criterion_type: CriterionType  # analog or binary
     services: list[str] = field(default_factory=list)
     description: str = ""
+    # ─── Tag Taxonomy v0.2 (all optional, backward compatible) ───
+    # TCO grounding inputs: "low" | "medium" | "high" (empty = unscored).
+    cost: str = ""
+    operational_overhead: str = ""
+    severity: str = ""
+    # Design trade-off this criterion sits on (tension key from tag_taxonomy.yaml).
+    tension: str = ""
+    # Readiness vector keys this criterion carries (from tag_taxonomy.yaml).
+    vectors: list[str] = field(default_factory=list)
+    # Compliance framework identifiers this criterion bears on.
+    compliance: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -85,6 +96,13 @@ class CriterionResult:
     criterion_type: CriterionType
     exclusion_reason: Optional[str] = None
     confidence_reduced: bool = False
+    # ─── Tag Taxonomy v0.2 (all optional, backward compatible) ───
+    cost: str = ""
+    operational_overhead: str = ""
+    severity: str = ""
+    tension: str = ""
+    vectors: list[str] = field(default_factory=list)
+    compliance: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -134,6 +152,13 @@ class ForgeAssessmentResult:
                     criterion_type=CriterionType(c_data["criterion_type"]),
                     exclusion_reason=c_data.get("exclusion_reason"),
                     confidence_reduced=c_data.get("confidence_reduced", False),
+                    # Tag Taxonomy v0.2 — defaulted so pre-v0.2 JSON still loads.
+                    cost=c_data.get("cost", ""),
+                    operational_overhead=c_data.get("operational_overhead", ""),
+                    severity=c_data.get("severity", ""),
+                    tension=c_data.get("tension", ""),
+                    vectors=c_data.get("vectors", []),
+                    compliance=c_data.get("compliance", []),
                 ))
             pillars.append(PillarScore(
                 code=p_data["code"],

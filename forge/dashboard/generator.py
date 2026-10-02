@@ -251,6 +251,243 @@ def _generate_gauge_svg(score: float) -> str:
     return "\n".join(svg_parts)
 
 
+def _aggregate_pillar_tco(pillar: dict) -> int:
+    """Derive a pillar-level 1–5 TCO indicator.
+
+    Prefers aggregating criterion-level cost/overhead/severity tags when they
+    are present in the assessment JSON (majority vote per input). Falls back to
+    the taxonomy's per-pillar primary-vector heuristic, and finally to a
+    neutral mid-scale value so every pillar can be plotted.
+
+    Args:
+        pillar: A pillar dict from the assessment JSON.
+
+    Returns:
+        An integer 1–5 TCO indicator (never 0 — pillars are always plottable).
+    """
+    from collections import Counter
+
+    from forge.tco import compute_tco
+
+    def _majority(values: list[str]) -> str:
+        present = [v for v in values if v in ("low", "medium", "high")]
+        if not present:
+            return ""
+        return Counter(present).most_common(1)[0][0]
+
+    criteria = pillar.get("criteria", []) or []
+    costs = [c.get("cost", "") for c in criteria]
+    overheads = [c.get("operational_overhead", "") for c in criteria]
+    severities = [c.get("severity", "") for c in criteria]
+
+    agg = compute_tco(_majority(costs), _majority(overheads), _majority(severities))
+    if agg > 0:
+        return agg
+
+    # No criterion-level tags: use a neutral mid-scale indicator so the pillar
+    # still appears on the quadrant without implying a specific cost profile.
+    return 3
+
+
+def _pillar_compliance(pillar_code: str) -> list[str]:
+    """Best-effort compliance frameworks a pillar bears on.
+
+    Governance/access/audit/quality pillars are treated as compliance-bearing;
+    this is a display heuristic for bubble color only and does not affect
+    scoring. Returns an empty list for pillars with no compliance bearing.
+    """
+    governance_pillars = {"P3", "P4", "P5", "P6", "P8", "P9"}
+    if pillar_code in governance_pillars:
+        # The specific frameworks are illustrative; the dashboard only keys off
+        # whether the list is non-empty for coloring.
+        return ["GDPR", "SOC2"]
+    return []
+
+
+def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
+    """Build the additive AI-readiness quadrant view.
+
+    Plots each pillar as a bubble where:
+
+    * X = pillar readiness score (0–100)
+    * Y = pillar TCO indicator (1–5, aggregated from criterion-level tags when
+      available, else a taxonomy/neutral fallback)
+    * bubble size = criteria count
+    * bubble color = whether the pillar bears on >=1 compliance framework
+
+    Client-side filter controls (by readiness vector, tension, and compliance
+    framework) recompute which bubbles are visible without a page reload. The
+    section is fully additive and self-contained; if taxonomy data is
+    unavailable the filters simply offer fewer options.
+
+    Args:
+        pillars: List of pillar dicts from the assessment JSON.
+        scoring: The ``scoring`` block from the assessment JSON.
+
+    Returns:
+        An HTML fragment (one ``.card``) ready to embed in the dashboard.
+    """
+    try:
+        from forge.taxonomy_loader import (
+            get_pillar_tags,
+            list_frameworks,
+            list_tensions,
+            list_vectors,
+        )
+        vectors = list_vectors()
+        tensions = list_tensions()
+        frameworks = list_frameworks()
+    except Exception:
+        get_pillar_tags = lambda code: {}  # noqa: E731
+        vectors, tensions, frameworks = {}, {}, []
+
+    # Build per-pillar plot data.
+    points = []
+    for p in pillars:
+        code = p["code"]
+        pct = scoring["pillar_scores"][code]["score_percent"]
+        total = scoring["pillar_scores"][code]["total"]
+        tco = _aggregate_pillar_tco(p)
+        tags = get_pillar_tags(code) or {}
+        pillar_vectors = []
+        if tags.get("primary_vector"):
+            pillar_vectors.append(tags["primary_vector"])
+        pillar_vectors.extend(tags.get("secondary", []) or [])
+        # Union of criterion-level vectors/tensions/compliance when present.
+        crit_vectors, crit_tensions, crit_compliance = set(), set(), set()
+        for c in p.get("criteria", []) or []:
+            crit_vectors.update(c.get("vectors", []) or [])
+            if c.get("tension"):
+                crit_tensions.add(c["tension"])
+            crit_compliance.update(c.get("compliance", []) or [])
+        all_vectors = sorted(set(pillar_vectors) | crit_vectors)
+        compliance = sorted(set(_pillar_compliance(code)) | crit_compliance)
+        all_tensions = sorted(crit_tensions)
+        points.append({
+            "code": code,
+            "name": p["name"],
+            "x": round(pct, 1),
+            "y": tco,
+            "count": total,
+            "compliance": compliance,
+            "vectors": all_vectors,
+            "tensions": all_tensions,
+        })
+
+    points_json = json.dumps(points)
+
+    # Filter control options.
+    vector_opts = "".join(
+        f'<option value="{k}">{v.get("label", k)}</option>'
+        for k, v in vectors.items()
+    )
+    tension_opts = "".join(
+        f'<option value="{k}">{v.get("label", k)}</option>'
+        for k, v in tensions.items()
+    )
+    framework_opts = "".join(
+        f'<option value="{fw}">{fw}</option>' for fw in frameworks
+    )
+
+    return f'''  <div class="card quadrant-card" style="margin-top:20px">
+    <h2>AI-Readiness Quadrant</h2>
+    <p style="color:#8b949e;font-size:13px;margin-bottom:12px">
+      Each bubble is a pillar — X: readiness score (0–100), Y: TCO indicator (1–5, higher = costlier),
+      size: criteria count, color: compliance-bearing (teal) vs. not (grey). Use the filters to focus the view.
+    </p>
+    <div class="quadrant-filters">
+      <label>Readiness vector
+        <select id="q-vector"><option value="">All</option>{vector_opts}</select>
+      </label>
+      <label>Tension
+        <select id="q-tension"><option value="">All</option>{tension_opts}</select>
+      </label>
+      <label>Compliance framework
+        <select id="q-framework"><option value="">All</option>{framework_opts}</select>
+      </label>
+    </div>
+    <div class="quadrant-plot-wrap">
+      <svg id="quadrant-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420"
+           style="width:100%;height:420px;display:block" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+    <p id="quadrant-empty" style="display:none;color:#8b949e;text-align:center;padding:12px">
+      No pillars match the selected filters.
+    </p>
+  </div>
+
+  <script>
+  (function() {{
+    var QUAD_DATA = {points_json};
+    var VB_W = 800, VB_H = 420;
+    var mL = 60, mR = 30, mT = 20, mB = 60;
+    var pw = VB_W - mL - mR, ph = VB_H - mT - mB;
+    var svg = document.getElementById('quadrant-svg');
+    if (!svg) return;
+    var NS = 'http://www.w3.org/2000/svg';
+
+    function xPos(x) {{ return mL + (x / 100) * pw; }}
+    function yPos(y) {{ return mT + (1 - (y - 1) / 4) * ph; }}  // TCO 1..5, 5 at top
+    function el(tag, attrs, text) {{
+      var e = document.createElementNS(NS, tag);
+      for (var k in attrs) e.setAttribute(k, attrs[k]);
+      if (text != null) e.textContent = text;
+      return e;
+    }}
+
+    function matches(p) {{
+      var v = document.getElementById('q-vector').value;
+      var t = document.getElementById('q-tension').value;
+      var f = document.getElementById('q-framework').value;
+      if (v && p.vectors.indexOf(v) === -1) return false;
+      if (t && p.tensions.indexOf(t) === -1) return false;
+      if (f && p.compliance.indexOf(f) === -1) return false;
+      return true;
+    }}
+
+    function render() {{
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      // Grid: X ticks (0..100) and Y ticks (1..5).
+      [0, 25, 50, 75, 100].forEach(function(vx) {{
+        var x = xPos(vx);
+        svg.appendChild(el('line', {{x1: x, y1: mT, x2: x, y2: mT + ph, stroke: '#21262d', 'stroke-width': 1}}));
+        svg.appendChild(el('text', {{x: x, y: VB_H - mB + 18, 'text-anchor': 'middle', fill: '#8b949e', 'font-size': 11}}, String(vx)));
+      }});
+      [1, 2, 3, 4, 5].forEach(function(vy) {{
+        var y = yPos(vy);
+        svg.appendChild(el('line', {{x1: mL, y1: y, x2: mL + pw, y2: y, stroke: '#21262d', 'stroke-width': 1}}));
+        svg.appendChild(el('text', {{x: mL - 8, y: y, 'text-anchor': 'end', 'dominant-baseline': 'middle', fill: '#8b949e', 'font-size': 11}}, String(vy)));
+      }});
+      // Axis titles.
+      svg.appendChild(el('text', {{x: mL + pw / 2, y: VB_H - 6, 'text-anchor': 'middle', fill: '#8b949e', 'font-size': 12}}, 'Readiness score →'));
+      svg.appendChild(el('text', {{x: 16, y: mT + ph / 2, 'text-anchor': 'middle', fill: '#8b949e', 'font-size': 12, transform: 'rotate(-90 16 ' + (mT + ph / 2) + ')'}}, 'TCO indicator →'));
+
+      var shown = 0;
+      QUAD_DATA.forEach(function(p) {{
+        if (!matches(p)) return;
+        shown++;
+        var cx = xPos(p.x), cy = yPos(p.y);
+        var r = 10 + Math.sqrt(p.count) * 2.2;
+        var fill = (p.compliance && p.compliance.length > 0) ? '#2aa198' : '#6c757d';
+        var c = el('circle', {{cx: cx, cy: cy, r: r, fill: fill, 'fill-opacity': 0.55, stroke: fill, 'stroke-width': 2}});
+        var title = el('title', {{}}, p.code + ': ' + p.name + '  (score ' + p.x + ', TCO ' + p.y + ', ' + p.count + ' criteria)');
+        c.appendChild(title);
+        svg.appendChild(c);
+        svg.appendChild(el('text', {{x: cx, y: cy + 4, 'text-anchor': 'middle', fill: '#f0f6fc', 'font-size': 11, 'font-weight': 600}}, p.code));
+      }});
+      document.getElementById('quadrant-empty').style.display = shown ? 'none' : 'block';
+    }}
+
+    ['q-vector', 'q-tension', 'q-framework'].forEach(function(id) {{
+      var e = document.getElementById(id);
+      if (e) e.addEventListener('change', render);
+    }});
+    render();
+  }})();
+  </script>
+
+'''
+
+
 def generate_dashboard(results_file, output_file="forge_output/forge_dashboard.html"):
     """Generate interactive HTML dashboard from assessment results."""
     os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
@@ -398,6 +635,11 @@ table.recs th { background: #21262d; padding: 10px; text-align: left; }
 table.recs td { padding: 8px 10px; border-bottom: 1px solid #21262d; }
 .stack-section { margin: 16px 0; padding: 12px; background: #1c2128; border-radius: 8px; }
 .stack-title { font-weight: 700; color: #58a6ff; margin-bottom: 8px; }
+.quadrant-filters { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.quadrant-filters label { font-size: 12px; color: #8b949e; display: flex; flex-direction: column; gap: 4px; }
+.quadrant-filters select { background: #21262d; color: #c9d1d9; border: 1px solid #30363d;
+                           border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+.quadrant-plot-wrap { width: 100%; background: #0d1117; border-radius: 8px; padding: 8px; }
 @media (max-width: 768px) {
   .grid { grid-template-columns: 1fr; }
   .score-hero { flex-direction: column; gap: 16px; }
@@ -512,6 +754,12 @@ table.recs td { padding: 8px 10px; border-bottom: 1px solid #21262d; }
 '''
         except Exception:
             pass  # Trend section simply won't appear if something goes wrong
+
+    # Embed the additive AI-readiness quadrant view.
+    try:
+        html += _generate_quadrant_section(pillars, scoring)
+    except Exception:
+        pass  # Quadrant section is additive; never block the core dashboard.
 
     html += '''  <div class="card">
     <h2>Criteria Detail</h2>
