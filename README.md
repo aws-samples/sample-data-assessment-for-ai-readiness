@@ -305,6 +305,66 @@ When only one platform is assessed, the dashboard renders identically to the sin
 
 ---
 
+## Tagging Taxonomy, TCO Indicator, and AI-Readiness Quadrant
+
+A presence check tells you a service exists. It does not tell you what owning it costs, which regulatory control it evidences, or which architectural trade-off it sits on. Readiness scoring without that context makes a passing pillar and a fragile one look identical on the dashboard. This feature lets every pillar and probe carry the capability it proves, the tension it resolves, a cost of ownership, and the compliance frameworks it supports. The change is additive: existing criteria and previously generated assessment JSON load unchanged.
+
+### Tagging taxonomy (`forge_config/tag_taxonomy.yaml`)
+
+The taxonomy (version 0.2) attaches three kinds of metadata to pillars and probes.
+
+Readiness vectors name the capability a probe proves, nine in total, mapped to the FORGE letters (F, O, R, G, E): governed, interoperable, open-framework, fine-grained access control, relevance, AI-only, current, reliable, and controllable. Open-framework and interoperable are portability signals: an open table format or a standard, cross-engine interface is a bet on future portability and freedom from lock-in. They are independent of governance and say nothing about how governed a given deployment is.
+
+Architectural tensions name the trade-off a probe sits on: portable-vs-maturity, freshness-vs-cost, autonomy-vs-safety, centralization-vs-federation, coverage-vs-precision, and trust-vs-velocity. Tagging the tension lets a reader filter the estate by the question a reviewer is actually asking.
+
+The compliance catalog maps a probe to the frameworks whose control it helps evidence: GDPR, HIPAA, SOC2, PCI-DSS, FINRA, ISO 27001, FedRAMP, CCPA, DORA, and the EU AI Act. An empty list means the probe is not compliance-bearing.
+
+### TCO indicator (`forge/tco.py`)
+
+Cost of ownership is a single score from 1 to 5, derived rather than asserted so it is reproducible from its inputs. Cost and operational overhead form the base; severity is a multiplier, because a cheap fix on a high-severity control is still expensive to get wrong.
+
+```python
+def compute_tco(cost: str, operational_overhead: str, severity: str) -> int:
+    ...
+```
+
+```
+tco = clamp(round(1 + ((cost_pts + overhead_pts) * severity_mult - 1.6) * (4 / 6.2)), 1, 5)
+```
+
+Cost and overhead map low, medium, high to 1, 2, 3 points. Severity multiplies by 0.8, 1.0, or 1.3. All-low inputs score 1, all-high inputs score 5, and a moderate-cost high-severity probe still lands at 4. A probe with no cost or overhead signal is treated as unscored and returns 0.
+
+### New probe and criterion fields
+
+`CriterionDefinition` and `CriterionResult` each gain six optional fields: `cost`, `operational_overhead`, `severity`, `tension`, `vectors`, and `compliance`. All are defaulted to empty strings or empty lists, so they are backward compatible. `ForgeAssessmentResult.from_dict` reads them with safe defaults, so assessment JSON produced before version 0.2 still deserializes.
+
+### AI-readiness quadrant (dashboard)
+
+The generated dashboard gains a quadrant card that plots each pillar as a bubble: the X axis is the readiness score from 0 to 100, the Y axis is the TCO indicator from 1 to 5, bubble size is the number of criteria in the pillar, and bubble color marks whether the pillar bears on at least one compliance framework. Client-side filters narrow the view by readiness vector, by tension, and by compliance framework, and the plot recomputes in the browser. The card is wrapped defensively, so the core dashboard still renders if taxonomy data is unavailable.
+
+### Usage
+
+```python
+from forge.taxonomy_loader import load_taxonomy, list_vectors, list_tensions, list_frameworks
+
+taxonomy = load_taxonomy()      # full dict, or {} if the file is missing
+vectors = list_vectors()
+tensions = list_tensions()
+frameworks = list_frameworks()
+```
+
+The quadrant renders automatically in the dashboard; no extra steps are required.
+
+Try the sample. An illustrative tagged assessment ships at `examples/sample_tagged_assessment.json`. It covers all nine pillars with representative tagged criteria and is marked as example data in `metadata.note`; it is not a real assessment. Render it with:
+
+```bash
+python3 -m forge dashboard examples/sample_tagged_assessment.json --output forge_output/sample_dashboard.html
+```
+
+Open the resulting HTML and scroll to the AI-Readiness Quadrant card. The sample varies readiness scores and cost of ownership across pillars, so the bubbles spread across the quadrants: well-governed, low-cost pillars sit toward the lower right, while high-cost, lower-readiness gaps sit toward the upper left. Use the vector, tension, and compliance filters to narrow the view.
+
+---
+
 ## Testing
 
 ```bash

@@ -1,0 +1,644 @@
+{
+  "customer_name": "Example Corp (ILLUSTRATIVE)",
+  "account_id": "000000000000",
+  "region": "us-east-1",
+  "timestamp": "2026-01-01T00:00:00Z",
+  "assessment_id": "sample-illustrative-0001",
+  "metadata": {
+    "note": "ILLUSTRATIVE EXAMPLE DATA ONLY. This file is a hand-authored sample used to demonstrate the tagging taxonomy, TCO indicator, and AI-readiness quadrant. It is NOT a real assessment and does not reflect any real AWS account, resource inventory, or score.",
+    "profile": {
+      "architecture": "open_lakehouse",
+      "workload": "multi_tool_agents",
+      "industry": "financial_services",
+      "agent_maturity": "single_agent_prod"
+    }
+  },
+  "profile": {
+    "architecture": "open_lakehouse",
+    "workload": "multi_tool_agents",
+    "industry": "financial_services",
+    "agent_maturity": "single_agent_prod"
+  },
+  "scoring": {
+    "forge_score": 54.0,
+    "band": "GOVERNED",
+    "raw_score": 54.0,
+    "coverage_multiplier": 1.0,
+    "penalty_percent": 0,
+    "pillar_scores": {
+      "P1": {
+        "score_percent": 82,
+        "met": 17,
+        "total": 21
+      },
+      "P2": {
+        "score_percent": 71,
+        "met": 12,
+        "total": 17
+      },
+      "P3": {
+        "score_percent": 20,
+        "met": 3,
+        "total": 14
+      },
+      "P4": {
+        "score_percent": 35,
+        "met": 6,
+        "total": 18
+      },
+      "P5": {
+        "score_percent": 88,
+        "met": 15,
+        "total": 17
+      },
+      "P6": {
+        "score_percent": 60,
+        "met": 7,
+        "total": 12
+      },
+      "P7": {
+        "score_percent": 78,
+        "met": 12,
+        "total": 15
+      },
+      "P8": {
+        "score_percent": 18,
+        "met": 3,
+        "total": 16
+      },
+      "P9": {
+        "score_percent": 45,
+        "met": 5,
+        "total": 12
+      }
+    }
+  },
+  "pillars": [
+    {
+      "code": "P1",
+      "name": "Agent Access & Discovery",
+      "total": 21,
+      "raw_score": 82,
+      "relevant_count": 3,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "MCP endpoint exposed for data access",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.9,
+          "evidence": {
+            "description": "MCP server detected",
+            "confidence_percent": 90
+          },
+          "cost": "low",
+          "operational_overhead": "low",
+          "severity": "low",
+          "tension": "portable_vs_maturity",
+          "vectors": [
+            "interoperable",
+            "ai_only"
+          ],
+          "compliance": []
+        },
+        {
+          "index": 2,
+          "name": "Open table format in use",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.85,
+          "evidence": {
+            "description": "Open table format catalog present",
+            "confidence_percent": 85
+          },
+          "cost": "low",
+          "operational_overhead": "low",
+          "severity": "low",
+          "tension": "portable_vs_maturity",
+          "vectors": [
+            "open_framework",
+            "interoperable"
+          ],
+          "compliance": []
+        },
+        {
+          "index": 3,
+          "name": "Cross-engine query interface available",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.7,
+          "evidence": {
+            "description": "No standard cross-engine interface found",
+            "confidence_percent": 70
+          },
+          "cost": "low",
+          "operational_overhead": "medium",
+          "severity": "low",
+          "tension": "centralization_vs_federation",
+          "vectors": [
+            "interoperable"
+          ],
+          "compliance": []
+        }
+      ]
+    },
+    {
+      "code": "P2",
+      "name": "Semantic Context & Retrieval",
+      "total": 17,
+      "raw_score": 71,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Business glossary coverage",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.8,
+          "evidence": {
+            "description": "Glossary covers majority of domains",
+            "confidence_percent": 80
+          },
+          "cost": "medium",
+          "operational_overhead": "medium",
+          "severity": "low",
+          "tension": "coverage_vs_precision",
+          "vectors": [
+            "relevance"
+          ],
+          "compliance": []
+        },
+        {
+          "index": 2,
+          "name": "Retrieval relevance validated",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.75,
+          "evidence": {
+            "description": "Relevance probes pass",
+            "confidence_percent": 75
+          },
+          "cost": "low",
+          "operational_overhead": "medium",
+          "severity": "low",
+          "tension": "coverage_vs_precision",
+          "vectors": [
+            "relevance",
+            "ai_only"
+          ],
+          "compliance": []
+        }
+      ]
+    },
+    {
+      "code": "P3",
+      "name": "Data Lineage & Provenance",
+      "total": 14,
+      "raw_score": 20,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "End-to-end lineage captured",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.65,
+          "evidence": {
+            "description": "Lineage partial, gaps in ingestion",
+            "confidence_percent": 65
+          },
+          "cost": "high",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "trust_vs_velocity",
+          "vectors": [
+            "reliable",
+            "governance"
+          ],
+          "compliance": [
+            "GDPR",
+            "SOC2"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "Provenance signed and verifiable",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.6,
+          "evidence": {
+            "description": "No signing detected",
+            "confidence_percent": 60
+          },
+          "cost": "high",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "trust_vs_velocity",
+          "vectors": [
+            "reliable"
+          ],
+          "compliance": [
+            "FINRA",
+            "DORA"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "P4",
+      "name": "Data Quality, Contracts & Classification",
+      "total": 18,
+      "raw_score": 35,
+      "relevant_count": 3,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Data contracts enforced on critical tables",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.7,
+          "evidence": {
+            "description": "Contracts defined but not enforced",
+            "confidence_percent": 70
+          },
+          "cost": "high",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "trust_vs_velocity",
+          "vectors": [
+            "reliable",
+            "governance"
+          ],
+          "compliance": [
+            "SOC2",
+            "ISO_27001"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "PII classification applied",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.82,
+          "evidence": {
+            "description": "Classification tags present on sensitive columns",
+            "confidence_percent": 82
+          },
+          "cost": "medium",
+          "operational_overhead": "medium",
+          "severity": "high",
+          "tension": "coverage_vs_precision",
+          "vectors": [
+            "governance",
+            "reliable"
+          ],
+          "compliance": [
+            "GDPR",
+            "HIPAA",
+            "CCPA"
+          ]
+        },
+        {
+          "index": 3,
+          "name": "Quality rule coverage",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.68,
+          "evidence": {
+            "description": "DQ rules cover a minority of tables",
+            "confidence_percent": 68
+          },
+          "cost": "medium",
+          "operational_overhead": "high",
+          "severity": "medium",
+          "tension": "trust_vs_velocity",
+          "vectors": [
+            "reliable"
+          ],
+          "compliance": []
+        }
+      ]
+    },
+    {
+      "code": "P5",
+      "name": "Access Control, Identity & Tenancy",
+      "total": 17,
+      "raw_score": 88,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Row and column level security enforced",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.88,
+          "evidence": {
+            "description": "Fine-grained policies active at query time",
+            "confidence_percent": 88
+          },
+          "cost": "medium",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "centralization_vs_federation",
+          "vectors": [
+            "fine_grained_access_control",
+            "governance"
+          ],
+          "compliance": [
+            "GDPR",
+            "HIPAA",
+            "PCI_DSS"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "Tenant isolation verified",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.84,
+          "evidence": {
+            "description": "Isolation boundaries validated",
+            "confidence_percent": 84
+          },
+          "cost": "medium",
+          "operational_overhead": "medium",
+          "severity": "high",
+          "tension": "centralization_vs_federation",
+          "vectors": [
+            "fine_grained_access_control"
+          ],
+          "compliance": [
+            "SOC2",
+            "ISO_27001"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "P6",
+      "name": "Observability & Audit",
+      "total": 12,
+      "raw_score": 60,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Access audit trail complete",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.8,
+          "evidence": {
+            "description": "Audit log coverage verified",
+            "confidence_percent": 80
+          },
+          "cost": "medium",
+          "operational_overhead": "medium",
+          "severity": "medium",
+          "tension": "centralization_vs_federation",
+          "vectors": [
+            "governance",
+            "reliable"
+          ],
+          "compliance": [
+            "SOC2",
+            "FedRAMP"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "Query-level monitoring in place",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.66,
+          "evidence": {
+            "description": "Partial query observability",
+            "confidence_percent": 66
+          },
+          "cost": "medium",
+          "operational_overhead": "medium",
+          "severity": "medium",
+          "tension": "freshness_vs_cost",
+          "vectors": [
+            "governance"
+          ],
+          "compliance": [
+            "ISO_27001"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "P7",
+      "name": "Real-Time, Freshness & Zero-ETL",
+      "total": 15,
+      "raw_score": 78,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Zero-ETL path to analytics store",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.85,
+          "evidence": {
+            "description": "Zero-ETL integration active",
+            "confidence_percent": 85
+          },
+          "cost": "high",
+          "operational_overhead": "medium",
+          "severity": "low",
+          "tension": "freshness_vs_cost",
+          "vectors": [
+            "current",
+            "interoperable"
+          ],
+          "compliance": []
+        },
+        {
+          "index": 2,
+          "name": "Freshness SLA tracked",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.78,
+          "evidence": {
+            "description": "Freshness within SLA",
+            "confidence_percent": 78
+          },
+          "cost": "medium",
+          "operational_overhead": "medium",
+          "severity": "low",
+          "tension": "freshness_vs_cost",
+          "vectors": [
+            "current"
+          ],
+          "compliance": []
+        }
+      ]
+    },
+    {
+      "code": "P8",
+      "name": "Agent Controllability & Policy",
+      "total": 16,
+      "raw_score": 18,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Guardrails enforce policy on agent actions",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.62,
+          "evidence": {
+            "description": "No action-level policy enforcement detected",
+            "confidence_percent": 62
+          },
+          "cost": "high",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "autonomy_vs_safety",
+          "vectors": [
+            "controllable",
+            "governance"
+          ],
+          "compliance": [
+            "EU_AI_ACT",
+            "SOC2"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "Agent action approval workflow",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.6,
+          "evidence": {
+            "description": "No approval workflow present",
+            "confidence_percent": 60
+          },
+          "cost": "medium",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "autonomy_vs_safety",
+          "vectors": [
+            "controllable",
+            "ai_only"
+          ],
+          "compliance": [
+            "EU_AI_ACT"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "P9",
+      "name": "Decision Lineage & Explainability",
+      "total": 12,
+      "raw_score": 45,
+      "relevant_count": 2,
+      "not_applicable_count": 0,
+      "undetermined_count": 0,
+      "criteria": [
+        {
+          "index": 1,
+          "name": "Decision lineage recorded per agent action",
+          "met": false,
+          "score": 0.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.64,
+          "evidence": {
+            "description": "Decision lineage not consistently captured",
+            "confidence_percent": 64
+          },
+          "cost": "medium",
+          "operational_overhead": "high",
+          "severity": "high",
+          "tension": "autonomy_vs_safety",
+          "vectors": [
+            "controllable",
+            "reliable",
+            "ai_only"
+          ],
+          "compliance": [
+            "EU_AI_ACT",
+            "FINRA"
+          ]
+        },
+        {
+          "index": 2,
+          "name": "Explanations available for retrieval results",
+          "met": true,
+          "score": 1.0,
+          "relevance_status": "relevant",
+          "criterion_type": "binary",
+          "confidence_score": 0.72,
+          "evidence": {
+            "description": "Explanation metadata attached",
+            "confidence_percent": 72
+          },
+          "cost": "low",
+          "operational_overhead": "medium",
+          "severity": "medium",
+          "tension": "coverage_vs_precision",
+          "vectors": [
+            "ai_only",
+            "relevance"
+          ],
+          "compliance": []
+        }
+      ]
+    }
+  ]
+}
