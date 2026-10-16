@@ -4,8 +4,9 @@ DAFM — Tag Taxonomy Loader
 Loads the authoritative tagging taxonomy (``forge_config/tag_taxonomy.yaml``,
 v0.2) that describes:
 
-* ``readiness_vectors`` — the FORGE readiness vectors a criterion can carry,
-  each mapped to a FORGE letter (F/O/R/G/E).
+* ``readiness_vectors`` — the DAFM readiness vectors a criterion can carry,
+  each assigned a ``pillar_group`` theme (Governance & Access, Openness &
+  Portability, Timeliness, Fitness for AI, Control & Explainability).
 * ``tensions`` — the design trade-offs a criterion may sit on.
 * ``compliance_frameworks`` — the catalog of regulatory frameworks a
   criterion may be relevant to.

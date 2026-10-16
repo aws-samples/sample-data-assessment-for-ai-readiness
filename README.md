@@ -313,7 +313,7 @@ A presence check tells you a service exists. It does not tell you what owning it
 
 The taxonomy (version 0.2) attaches three kinds of metadata to pillars and probes.
 
-Readiness vectors name the capability a probe proves, nine in total, mapped to the FORGE letters (F, O, R, G, E): governed, interoperable, open-framework, fine-grained access control, relevance, AI-only, current, reliable, and controllable. Open-framework and interoperable are portability signals: an open table format or a standard, cross-engine interface is a bet on future portability and freedom from lock-in. They are independent of governance and say nothing about how governed a given deployment is.
+Readiness vectors name the capability a probe proves, nine in total, each assigned a `pillar_group` theme: governed, interoperable, open-framework, fine-grained access control, relevance, AI-only, current, reliable, and controllable. The nine vectors roll up into five themes — Governance & Access, Openness & Portability, Timeliness, Fitness for AI, and Control & Explainability. Open-framework and interoperable are portability signals: an open table format or a standard, cross-engine interface is a bet on future portability and freedom from lock-in. They are independent of governance and say nothing about how governed a given deployment is.
 
 Architectural tensions name the trade-off a probe sits on: portable-vs-maturity, freshness-vs-cost, autonomy-vs-safety, centralization-vs-federation, coverage-vs-precision, and trust-vs-velocity. Tagging the tension lets a reader filter the estate by the question a reviewer is actually asking.
 
