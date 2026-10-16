@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar 1: Agent Access & Discovery (21 criteria)
+DAFM — Pillar 1: Agent Access & Discovery (21 criteria)
 """
 from forge.pillar_assessors._common import get_client, safe_call, make_criterion
 

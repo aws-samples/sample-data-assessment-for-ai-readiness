@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar 8: Agent Controllability & Policy Enforcement (16 criteria)
+DAFM — Pillar 8: Agent Controllability & Policy Enforcement (16 criteria)
 """
 from forge.pillar_assessors._common import get_client, safe_call, make_criterion
 

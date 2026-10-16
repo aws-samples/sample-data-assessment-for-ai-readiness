@@ -170,7 +170,7 @@ class TestComputeCoverageMultiplier:
 
 class TestComputeForgeScore:
     def test_simple_multiply_and_round(self):
-        """FORGE Score = raw * multiplier, rounded to 1 decimal."""
+        """DAFM Score = raw * multiplier, rounded to 1 decimal."""
         assert compute_forge_score(67.8, 0.92) == 62.4
 
     def test_perfect_score(self):

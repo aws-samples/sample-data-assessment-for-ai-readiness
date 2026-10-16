@@ -1,13 +1,13 @@
 """
-FORGE 2.3 — Readiness Band Classification
+DAFM — Readiness Band Classification
 
-Maps a FORGE score (0–100) to one of five maturity bands using decimal boundaries.
+Maps a DAFM score (0–100) to one of five maturity bands using decimal boundaries.
 """
 from forge.models import ReadinessBand
 
 
 def classify_band(forge_score: float) -> ReadinessBand:
-    """Classify a FORGE score into a readiness band.
+    """Classify a DAFM score into a readiness band.
 
     Band boundaries (decimal thresholds):
         UNREADY:       score < 26.0
@@ -17,7 +17,7 @@ def classify_band(forge_score: float) -> ReadinessBand:
         FORGE-NATIVE:  score ≥ 91.0
 
     Args:
-        forge_score: The computed FORGE score (0.0–100.0)
+        forge_score: The computed DAFM score (0.0–100.0)
 
     Returns:
         The corresponding ReadinessBand enum value
@@ -27,7 +27,7 @@ def classify_band(forge_score: float) -> ReadinessBand:
     """
     if forge_score < 0.0 or forge_score > 100.0:
         raise ValueError(
-            f"FORGE score {forge_score} is outside the valid range of 0.0 to 100.0"
+            f"DAFM score {forge_score} is outside the valid range of 0.0 to 100.0"
         )
 
     if forge_score >= 91.0:

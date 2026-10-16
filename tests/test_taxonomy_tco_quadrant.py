@@ -1,4 +1,4 @@
-"""Tests for the FORGE tag taxonomy, TCO indicator, model round-trip, and
+"""Tests for the DAFM tag taxonomy, TCO indicator, model round-trip, and
 the additive AI-readiness quadrant dashboard section."""
 
 from forge.dashboard.generator import _generate_quadrant_section

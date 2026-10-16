@@ -1,9 +1,9 @@
 ---
-name: FORGE Databricks Assessment Skill
+name: DAFM Databricks Assessment Skill
 description: Assess a Databricks environment using uploaded documents — architecture diagrams, cost reports, workspace descriptions — then ask targeted probing questions for gaps. Produces a PlatformSegment that merges with AWS for an estate score.
 ---
 
-# FORGE Databricks Assessment Skill — Document + Probing Flow
+# DAFM Databricks Assessment Skill — Document + Probing Flow
 
 Assess the user's Databricks environment by reading everything they provide (architecture diagrams, cost reports, workspace descriptions), extracting as much evidence as possible, then asking smart follow-up questions to fill the gaps.
 
@@ -13,7 +13,7 @@ Assess the user's Databricks environment by reading everything they provide (arc
 
 ## Prerequisites
 
-- A FORGE Profile must be locked (`forge_output/forge_profile.yaml` exists)
+- A DAFM Profile must be locked (`forge_output/forge_profile.yaml` exists)
 - The AWS assessment should have already been run (for estate merge)
 
 ---
@@ -228,7 +228,7 @@ open forge_output/forge_estate_dashboard.html
 ## Phase 6: Show Summary
 
 ```
-✅ FORGE Databricks Assessment Complete
+✅ DAFM Databricks Assessment Complete
 
   Databricks Score: 72.4 — GOVERNED
   Estate Score:     54.1 — GOVERNED  (AWS: 41.8 + Databricks: 72.4 merged)

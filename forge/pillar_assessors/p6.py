@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar 6: Observability & Audit (12 criteria)
+DAFM — Pillar 6: Observability & Audit (12 criteria)
 """
 from forge.pillar_assessors._common import get_client, safe_call, make_criterion
 

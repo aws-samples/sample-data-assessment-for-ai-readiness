@@ -1,7 +1,7 @@
 """
-FORGE 2.3 — Pillar Assessors Package
+DAFM — Pillar Assessors Package
 
-Deep assessment logic for all 9 FORGE pillars (142 criteria).
+Deep assessment logic for all 9 DAFM pillars (142 criteria).
 Each pillar's assessment is in its own module (p1.py through p9.py).
 """
 import logging

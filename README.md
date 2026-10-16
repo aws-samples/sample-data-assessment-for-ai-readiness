@@ -1,16 +1,16 @@
-# FORGE — Data for AI Readiness
+# DAFM — Data for AI Readiness
 
-## FORGE (Foundations for Open, Real-time, Governed Enterprises) Assessment Workbench
+## DAFM (Data & AI Fitness Model) Assessment Workbench
 
-Continuous diagnostic and improvement framework that scores your data estate readiness for agentic AI workloads. Produces a 0–100 readiness score from criteria across 9 pillars, shaped by a customer-specific FORGE Profile.
+Continuous diagnostic and improvement framework that scores your data estate readiness for agentic AI workloads. Produces a 0–100 readiness score from criteria across 9 pillars, shaped by a customer-specific DAFM Profile.
 
-![FORGE framework: 3 stacks, 9 pillars](docs/images/FORGE_STACKS.png)
+![DAFM framework: 3 stacks, 9 pillars](docs/images/FORGE_STACKS.png)
 
 Supports **multi-platform** assessments: AWS (API-based discovery) + Databricks (document-first + conversational), with type-aware merging into a single estate score.
 
 ## Quick Start
 
-![FORGE Assessment Skill workflow: STS AssumeRole → Probe → Collect → Assess → Output](docs/images/SKILL_WORKFLOW.png)
+![DAFM Assessment Skill workflow: STS AssumeRole → Probe → Collect → Assess → Output](docs/images/SKILL_WORKFLOW.png)
 
 ### Prerequisites
 
@@ -68,19 +68,19 @@ Or use the **Kiro Skill** interactively — it handles the full flow including d
 
 ## Using the Kiro Skills (Recommended)
 
-### FORGE Assessment Skill
+### DAFM Assessment Skill
 
-In Kiro chat, reference `#FORGE Assessment Skill`. The skill will:
+In Kiro chat, reference `#DAFM Assessment Skill`. The skill will:
 
 1. Help deploy the CloudFormation role
 2. Probe your AWS account — discover 30+ services
-3. Propose a FORGE Profile — infer Architecture, Workload, Industry, Maturity
+3. Propose a DAFM Profile — infer Architecture, Workload, Industry, Maturity
 4. Run the full assessment pipeline → dashboard
 5. **Ask if you have additional platforms** (Databricks) → trigger multi-platform flow
 
-### FORGE Databricks Assessment Skill
+### DAFM Databricks Assessment Skill
 
-Reference `#FORGE Databricks Assessment Skill` directly, or let the main skill trigger it. The document-first flow:
+Reference `#DAFM Databricks Assessment Skill` directly, or let the main skill trigger it. The document-first flow:
 
 1. Upload Databricks docs (billing CSV from `system.billing.usage`, architecture docs)
 2. Parser identifies services + pre-fills criteria from document evidence
@@ -92,10 +92,10 @@ Reference `#FORGE Databricks Assessment Skill` directly, or let the main skill t
 ## Scoring Model
 
 ```
-FORGE Score = Raw Score(effective_weights) × Coverage Multiplier(effective_floors)
+DAFM Score = Raw Score(effective_weights) × Coverage Multiplier(effective_floors)
 ```
 
-![Scoring engine: FORGE Score = Raw Score × Coverage Multiplier, with component definitions](docs/images/SCORING_ENGINE.png)
+![Scoring engine: DAFM Score = Raw Score × Coverage Multiplier, with component definitions](docs/images/SCORING_ENGINE.png)
 
 Worked example — a Healthcare SaaS / multi-tool-agents profile where two pillars fall below their floor, triggering a coverage penalty:
 
@@ -113,7 +113,7 @@ When multiple platforms are assessed, criteria merge using type-aware logic:
 
 Single-platform assessments produce identical results to pre-multi-platform behavior (backward compatible).
 
-### FORGE Profile Dimensions
+### DAFM Profile Dimensions
 
 | Dimension | Options |
 |-----------|---------|
@@ -253,7 +253,7 @@ forge-workbench/
 
 ### Relevance Engine — Service Discovery (`forge/relevance_engine/`)
 
-The front door of every AWS assessment. Before scoring anything, FORGE discovers what's actually running in the account so it only evaluates relevant criteria.
+The front door of every AWS assessment. Before scoring anything, DAFM discovers what's actually running in the account so it only evaluates relevant criteria.
 
 - **`probes.py`** — 30+ concurrent, read-only service probes (S3, Glue, Athena, Lake Formation, Redshift, Bedrock, SageMaker, and more). Each probe issues List/Describe/Get metadata calls to detect whether a service is in use.
 - **`validator.py`** — Corroborates probe results with Cost Explorer spend and CloudTrail activity to produce a confidence signal, reducing false positives from leftover/unused resources.
@@ -271,7 +271,7 @@ The core engine that turns discovery into a scored assessment.
 
 The math that converts criterion results into a 0–100 readiness score.
 
-- **`formula.py`** — `Raw Score(effective_weights) × Coverage Multiplier(effective_floors)` — the core FORGE formula.
+- **`formula.py`** — `Raw Score(effective_weights) × Coverage Multiplier(effective_floors)` — the core DAFM formula.
 - **`analog.py`** — 0.0–1.0 ratio scoring for partial-credit (analog) criteria.
 - **`bands.py`** — Classifies the final score into a readiness band (UNREADY → FORGE-NATIVE).
 
@@ -284,7 +284,7 @@ Turns the assessment result into a self-contained, shareable report.
 
 ### Multi-Platform Extension (`forge/platform_segments/`, `forge/scoring_engine/merge.py`)
 
-Optional layer that lets FORGE score more than just AWS (e.g., Databricks) and combine them into one estate score. Single-platform (AWS-only) assessments are unaffected — this layer is a pass-through when only one platform is present.
+Optional layer that lets DAFM score more than just AWS (e.g., Databricks) and combine them into one estate score. Single-platform (AWS-only) assessments are unaffected — this layer is a pass-through when only one platform is present.
 
 - **`platform_segments/aws_adapter.py`** — Wraps the AWS `ForgeAssessmentResult` into a platform-neutral `PlatformSegment` without changing the collector.
 - **`scoring_engine/merge.py`** — Merges criteria across platforms (AND for binary, pooled ratio for analog) and computes the combined estate score.
@@ -410,14 +410,14 @@ python3 -m pytest tests/ --cov=forge --cov-report=term-missing
 
 ### Operator guidance (run safely)
 
-- **Run with least privilege.** Run FORGE from a limited-privilege IAM principal —
+- **Run with least privilege.** Run DAFM from a limited-privilege IAM principal —
   not an admin/root identity. The assessment only needs to assume
   `FORGE-Assessment-Role` (read-only). Avoid running it with a principal that holds
   broad `iam:PassRole` or unrestricted `sts:AssumeRole`.
 - **Restrict who can assume the role.** The role trusts the same-account root and
   requires the `forge-skill` session tag. For defense-in-depth, apply an SCP or IAM
   permission boundary limiting which principals may assume `FORGE-Assessment-Role`.
-- **Verify tool integrity before running.** Pull FORGE from the official
+- **Verify tool integrity before running.** Pull DAFM from the official
   `aws-samples` source and verify the git tag/commit before executing, since the
   tool runs with your credentials.
 - **Verify output integrity.** Each run prints a SHA-256 of the results file.

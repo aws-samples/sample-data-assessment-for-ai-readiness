@@ -1,4 +1,4 @@
-"""Effective weight computation for the FORGE Profile Engine.
+"""Effective weight computation for the DAFM Profile Engine.
 
 Resolves a ForgeProfile declaration into effective pillar weights by:
 1. Summing shift vectors from all 4 dimensions per pillar

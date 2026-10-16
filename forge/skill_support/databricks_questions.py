@@ -1,5 +1,5 @@
 """
-FORGE 2.3 Assessment Workbench — Databricks Follow-Up Question Bank
+DAFM Assessment Workbench — Databricks Follow-Up Question Bank
 
 Defines the structured question bank used by the Databricks Skill during the
 follow-up phase of the document-first assessment flow. Questions are only asked

@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar 3: Data Lineage & Provenance (14 criteria)
+DAFM — Pillar 3: Data Lineage & Provenance (14 criteria)
 """
 from forge.pillar_assessors._common import get_client, safe_call, make_criterion
 

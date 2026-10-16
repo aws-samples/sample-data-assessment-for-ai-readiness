@@ -1,8 +1,8 @@
 """
-FORGE 2.3 — Scoring Formula
+DAFM — Scoring Formula
 
-Implements the FORGE Score calculation:
-  FORGE Score = Raw Score × Coverage Multiplier
+Implements the DAFM Score calculation:
+  DAFM Score = Raw Score × Coverage Multiplier
 
 Raw Score uses effective weights from the Profile Engine (no hardcoded weights).
 Coverage Multiplier uses effective floors from the Profile Engine (no hardcoded threshold).
@@ -112,9 +112,9 @@ def compute_forge_score(
     raw_score: float,
     coverage_multiplier: float,
 ) -> float:
-    """Compute final FORGE Score.
+    """Compute final DAFM Score.
 
-    FORGE Score = Raw Score × Coverage Multiplier
+    DAFM Score = Raw Score × Coverage Multiplier
 
     Args:
         raw_score: Weighted pillar score (0.0–100.0)

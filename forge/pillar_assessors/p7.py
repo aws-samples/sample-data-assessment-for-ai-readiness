@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar 7: Real-Time, Freshness & Zero-ETL (15 criteria)
+DAFM — Pillar 7: Real-Time, Freshness & Zero-ETL (15 criteria)
 """
 from forge.pillar_assessors._common import get_client, safe_call, make_criterion
 

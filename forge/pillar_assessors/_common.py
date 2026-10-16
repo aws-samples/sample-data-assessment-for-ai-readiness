@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar Assessors Common Utilities
+DAFM — Pillar Assessors Common Utilities
 
 Shared helper functions used across all pillar assessor modules.
 """

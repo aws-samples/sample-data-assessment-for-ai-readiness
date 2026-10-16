@@ -1,4 +1,4 @@
-"""YAML persistence and lock enforcement for FORGE Profiles.
+"""YAML persistence and lock enforcement for DAFM Profiles.
 
 Handles reading, writing, and locking forge_profile.yaml. Once a profile
 is persisted it is automatically locked — subsequent modification attempts

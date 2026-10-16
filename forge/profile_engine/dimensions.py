@@ -1,4 +1,4 @@
-"""Dimension enums and shift/floor lookup tables for the FORGE Profile Engine.
+"""Dimension enums and shift/floor lookup tables for the DAFM Profile Engine.
 
 This module defines the four profile dimensions (Architecture, Workload, Industry,
 AgentMaturity) as string enums, along with their corresponding shift vectors and

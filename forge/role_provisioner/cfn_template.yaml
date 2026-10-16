@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
-  FORGE 2.3 Assessment Role — least-privilege, zero-parameter same-account deployment.
-  Grants only the specific read-only actions used by the FORGE assessment pipeline.
+  DAFM Assessment Role — least-privilege, zero-parameter same-account deployment.
+  Grants only the specific read-only actions used by the DAFM assessment pipeline.
 
 Resources:
   ForgeAssessmentRole:
@@ -269,7 +269,7 @@ Resources:
 
 Outputs:
   ForgeAssessmentRoleArn:
-    Description: ARN of the FORGE 2.3 assessment role
+    Description: ARN of the DAFM assessment role
     Value: !GetAtt ForgeAssessmentRole.Arn
     Export:
       Name: ForgeAssessmentRoleArn

@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Dashboard Generator Package
+DAFM — Dashboard Generator Package
 
 Produces an interactive HTML dashboard from assessment results JSON.
 """

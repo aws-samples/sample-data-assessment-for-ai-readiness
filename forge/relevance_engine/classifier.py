@@ -1,5 +1,5 @@
 """
-FORGE 2.1 Relevance Engine — Criterion Relevance Classifier
+DAFM Relevance Engine — Criterion Relevance Classifier
 
 Maps probe and validation results to a RelevanceStatus for each criterion.
 Uses OR-semantics: if AT LEAST ONE required service is provisioned and active,

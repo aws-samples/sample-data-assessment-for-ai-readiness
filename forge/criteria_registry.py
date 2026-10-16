@@ -1,7 +1,7 @@
 """
-FORGE 2.3 Assessment Workbench — Criteria Registry
+DAFM Assessment Workbench — Criteria Registry
 
-Source of truth for all 142 FORGE criteria definitions. Each criterion is
+Source of truth for all 142 DAFM criteria definitions. Each criterion is
 mapped to its pillar (P1–P9), index, human-readable name, scoring type
 (analog or binary), and the AWS services it depends on for assessment.
 
