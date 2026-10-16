@@ -1,5 +1,5 @@
 """
-FORGE — Total Cost of Ownership (TCO) Indicator
+DAFM — Total Cost of Ownership (TCO) Indicator
 
 Computes a 1–5 TCO indicator for a criterion (or an aggregated pillar) from
 three grounded inputs defined in ``forge_config/tag_taxonomy.yaml`` (v0.2):

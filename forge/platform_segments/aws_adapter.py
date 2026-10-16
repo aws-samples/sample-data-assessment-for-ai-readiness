@@ -1,5 +1,5 @@
 """
-FORGE Platform Segments — AWS Adapter
+DAFM Platform Segments — AWS Adapter
 
 Wraps an existing ForgeAssessmentResult (from the AWS collector) into
 a PlatformSegment without modifying the collector's internal logic.

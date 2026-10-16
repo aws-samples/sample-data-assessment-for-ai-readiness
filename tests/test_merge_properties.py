@@ -1,5 +1,5 @@
 """
-Property-based tests for the FORGE Criteria Merge Engine.
+Property-based tests for the DAFM Criteria Merge Engine.
 
 Uses Hypothesis to verify merge invariants across randomized platform segments.
 

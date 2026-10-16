@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-FORGE 2.3 Dashboard Generator
+DAFM Dashboard Generator
 Takes assessment JSON and produces an interactive HTML dashboard.
 Uses pure inline SVG for all charts — zero external dependencies.
 

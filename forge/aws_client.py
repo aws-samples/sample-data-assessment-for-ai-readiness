@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Shared AWS Client Factory
+DAFM — Shared AWS Client Factory
 
 Provides centralized boto3 client creation with:
 - Same-account role assumption via STS (FORGE-Assessment-Role)

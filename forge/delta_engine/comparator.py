@@ -1,4 +1,4 @@
-"""FORGE Delta Engine — delta computation and classification.
+"""DAFM Delta Engine — delta computation and classification.
 
 Compares two most recent assessment records to produce score deltas,
 per-pillar deltas with classification, and band transitions.

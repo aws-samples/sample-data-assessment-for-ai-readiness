@@ -1,4 +1,4 @@
-"""FORGE Delta Engine — computes deltas between consecutive assessment records.
+"""DAFM Delta Engine — computes deltas between consecutive assessment records.
 
 Public API:
     - PillarDelta: Per-pillar delta with classification

@@ -1,6 +1,6 @@
-"""FORGE Profile Engine — public API.
+"""DAFM Profile Engine — public API.
 
-Resolves a FORGE Profile declaration into effective weights and effective floors
+Resolves a DAFM Profile declaration into effective weights and effective floors
 for use by the Scoring Engine.
 """
 

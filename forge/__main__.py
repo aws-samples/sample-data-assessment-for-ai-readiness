@@ -1,5 +1,5 @@
 """
-FORGE 2.3 Assessment Workbench — CLI Entry Point
+DAFM Assessment Workbench — CLI Entry Point
 
 Usage:
     python3 -m forge profile declare --architecture open_lakehouse --workload multi_tool_agents \
@@ -8,8 +8,8 @@ Usage:
     python3 -m forge assess --account-id 123456789012 --region us-east-1 [--show-delta]
 
 Two subcommands:
-    1. profile declare — Declare and lock a FORGE Profile for the engagement.
-    2. assess — Run a FORGE assessment using the locked profile.
+    1. profile declare — Declare and lock a DAFM Profile for the engagement.
+    2. assess — Run a DAFM assessment using the locked profile.
 
 All configuration comes from command-line flags — no interactive prompts.
 """
@@ -48,7 +48,7 @@ def _check_removed_track_arg(argv: list[str]) -> None:
     for arg in argv:
         if arg == "--track" or arg.startswith("--track="):
             print(
-                "Error: The --track option has been replaced by FORGE Profile declaration. "
+                "Error: The --track option has been replaced by DAFM Profile declaration. "
                 "Use `forge profile declare` to set up a profile.",
                 file=sys.stderr,
             )
@@ -56,24 +56,24 @@ def _check_removed_track_arg(argv: list[str]) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Build the argument parser with subcommands for FORGE 2.3 CLI."""
+    """Build the argument parser with subcommands for the DAFM CLI."""
     parser = argparse.ArgumentParser(
         prog="forge",
-        description="FORGE 2.3 Assessment Workbench — assess AWS accounts using FORGE Profiles.",
+        description="DAFM Assessment Workbench — assess AWS accounts using DAFM Profiles.",
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # --- profile declare subcommand ---
     profile_parser = subparsers.add_parser(
-        "profile", help="Manage FORGE Profile"
+        "profile", help="Manage DAFM Profile"
     )
     profile_subparsers = profile_parser.add_subparsers(
         dest="profile_action", help="Profile actions"
     )
 
     declare_parser = profile_subparsers.add_parser(
-        "declare", help="Declare and lock a FORGE Profile for this engagement"
+        "declare", help="Declare and lock a DAFM Profile for this engagement"
     )
     declare_parser.add_argument(
         "--architecture",
@@ -102,7 +102,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     # --- assess subcommand ---
     assess_parser = subparsers.add_parser(
-        "assess", help="Run a FORGE assessment against an AWS account"
+        "assess", help="Run a DAFM assessment against an AWS account"
     )
     assess_parser.add_argument(
         "--account-id",
@@ -184,7 +184,7 @@ def _handle_profile_declare(args) -> None:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print("FORGE Profile declared and locked for this engagement:")
+    print("DAFM Profile declared and locked for this engagement:")
     print(f"  Architecture:   {profile.architecture.value}")
     print(f"  Workload:       {profile.workload.value}")
     print(f"  Industry:       {profile.industry.value}")
@@ -199,7 +199,7 @@ def _handle_assess(args) -> None:
         forge_profile = load_profile()
     except ProfileNotFoundError:
         print(
-            "Error: No FORGE Profile declared. You must declare a profile before running "
+            "Error: No DAFM Profile declared. You must declare a profile before running "
             "an assessment.\n\n"
             "  forge profile declare --architecture <value> --workload <value> "
             "--industry <value> --agent-maturity <value>\n\n"
@@ -241,7 +241,7 @@ def _handle_assess(args) -> None:
         print(f"Error writing output file: {e}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"FORGE 2.3 Assessment Complete")
+    print(f"DAFM Assessment Complete")
     print(f"  Score: {result.summary['forge_score']} ({result.summary['readiness_band']})")
     print(f"  Profile: {forge_profile.architecture.value} / {forge_profile.workload.value} / "
           f"{forge_profile.industry.value} / {forge_profile.agent_maturity.value}")

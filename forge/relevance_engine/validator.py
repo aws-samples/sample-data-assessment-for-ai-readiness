@@ -1,5 +1,5 @@
 """
-FORGE 2.1 — Relevance Engine: Service Validator
+DAFM — Relevance Engine: Service Validator
 
 Validates provisioned services against usage signals from AWS Cost Explorer
 and CloudTrail to assign confidence scores and classify activity level.

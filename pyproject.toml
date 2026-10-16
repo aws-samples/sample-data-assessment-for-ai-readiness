@@ -1,7 +1,7 @@
 [project]
 name = "forge-assessment"
 version = "2.3.0"
-description = "FORGE 2.3 Assessment Workbench — AWS data estate readiness scoring for agentic AI"
+description = "DAFM Assessment Workbench — AWS data estate readiness scoring for agentic AI"
 requires-python = ">=3.9"
 dependencies = [
     # Pinned to exact versions to reduce supply-chain risk (see docs/FORGE_Threat_Model.md, T6/WI-3).

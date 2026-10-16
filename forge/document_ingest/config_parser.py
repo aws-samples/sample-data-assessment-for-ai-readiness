@@ -1,5 +1,5 @@
 """
-FORGE 2.3 Assessment Workbench — Document Config Parser
+DAFM Assessment Workbench — Document Config Parser
 
 Parses UC config exports, workspace descriptions, and architecture documents
 to extract criterion-relevant evidence for Databricks assessment pre-fill.

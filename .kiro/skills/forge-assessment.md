@@ -1,13 +1,13 @@
 ---
-name: FORGE Assessment Skill
-description: Run a FORGE 2.3 assessment — deploy the IAM role, probe the account, declare a FORGE Profile, collect 142 criteria, score, and generate the dashboard. Supports multi-platform estate assessments (AWS + Databricks).
+name: DAFM Assessment Skill
+description: Run a DAFM assessment — deploy the IAM role, probe the account, declare a DAFM Profile, collect 142 criteria, score, and generate the dashboard. Supports multi-platform estate assessments (AWS + Databricks).
 ---
 
-# FORGE 2.3 Assessment Skill — From IAM Setup to Score Memory
+# DAFM Assessment Skill — From IAM Setup to Score Memory
 
-Guide the user through the complete FORGE 2.3 assessment workflow. The skill has two pause points where it waits for user input:
+Guide the user through the complete DAFM assessment workflow. The skill has two pause points where it waits for user input:
 
-1. **Profile confirmation** (Step 4) — User confirms or adjusts the proposed FORGE Profile
+1. **Profile confirmation** (Step 4) — User confirms or adjusts the proposed DAFM Profile
 2. **Multi-platform question** (Step 6) — User says whether they have additional platforms
 
 Everything else runs automatically.
@@ -149,7 +149,7 @@ Display the probe results to the user:
 
 ### 4. Profile Wizard — Agent Proposes, User Confirms
 
-**If no `forge_output/forge_profile.yaml` exists**, the agent analyzes probe results to PROPOSE a FORGE Profile, then asks the user to confirm.
+**If no `forge_output/forge_profile.yaml` exists**, the agent analyzes probe results to PROPOSE a DAFM Profile, then asks the user to confirm.
 
 **How the agent determines the proposal:**
 
@@ -177,7 +177,7 @@ Display the probe results to the user:
 **Present the proposal to the user:**
 
 ```
-Based on your account probe, I recommend this FORGE Profile:
+Based on your account probe, I recommend this DAFM Profile:
 
   Architecture:   open_lakehouse  (detected: Glue catalog, Lake Formation, Iceberg tables)
   Workload:       multi_tool_agents  (detected: 2 Bedrock agents, Step Functions)
@@ -212,7 +212,7 @@ python3 -m forge assess --account-id <account-id> --region <region> --show-delta
 The pipeline runs without stopping:
 
 1. **COLLECT** → 142 criteria (89 auto 🤖 + 53 manual 🔧)
-2. **ASSESS** → Apply FORGE Profile → effective weights/floors → score → recommendations
+2. **ASSESS** → Apply DAFM Profile → effective weights/floors → score → recommendations
 3. **OUTPUT** → JSON manifest + markdown roadmap + history append
 
 **DO NOT** ask the user anything during this step. The only pause point in the entire flow is Step 4 (profile confirmation).
@@ -256,7 +256,7 @@ open forge_output/forge_dashboard.html
 Print a concise summary:
 
 ```
-✅ FORGE 2.3 Assessment Complete
+✅ DAFM Assessment Complete
 
   Score:   38.6 — FOUNDATIONAL
   Profile: open_lakehouse / multi_tool_agents / general / single_agent_prod
@@ -285,7 +285,7 @@ Print a concise summary:
 
 ### 8. Run Databricks Assessment (Document + Probing)
 
-Trigger the Databricks assessment flow. This runs entirely within the same session using the same locked FORGE Profile.
+Trigger the Databricks assessment flow. This runs entirely within the same session using the same locked DAFM Profile.
 
 ```python
 from forge.skill_support.databricks_skill import get_initial_prompt, advance_skill_phase
@@ -347,7 +347,7 @@ open forge_output/forge_estate_dashboard.html
 Print the combined summary:
 
 ```
-✅ FORGE Estate Assessment Complete (Multi-Platform)
+✅ DAFM Estate Assessment Complete (Multi-Platform)
 
   AWS Score:        44.8 — FOUNDATIONAL
   Databricks Score: 65.2 — GOVERNED
@@ -383,11 +383,11 @@ The estate dashboard shows:
 
 ---
 
-## Scoring Model: FORGE 2.3 Profiles
+## Scoring Model: DAFM Profiles
 
-**Formula:** `FORGE Score = Raw Score(effective_weights) × Coverage Multiplier(effective_floors)`
+**Formula:** `DAFM Score = Raw Score(effective_weights) × Coverage Multiplier(effective_floors)`
 
-- **No Track Adjustment** — replaced by FORGE Profiles
+- **No Track Adjustment** — replaced by DAFM Profiles
 - **9 Pillars, 142 Criteria** — same framework, new weighting
 - **Base Weights**: P1=17%, P2=17%, P3=8%, P4=12%, P5=11%, P6=9%, P7=7%, P8=10%, P9=9%
 - **Profile Shifts**: ±8pp cap per pillar, 2% floor, normalized to 100%

@@ -1,5 +1,5 @@
 """
-FORGE Platform Segments — Public API
+DAFM Platform Segments — Public API
 
 This module is the public interface for multi-platform assessment scoring.
 It re-exports the core data structures and provides functions for wrapping
@@ -37,13 +37,13 @@ def build_estate_result(
 
     Merges criteria across all platform segments using type-aware logic
     (AND for binary, pooled ratio for analog), computes pillar scores from
-    the merged criteria, and applies the standard FORGE formula to produce
+    the merged criteria, and applies the standard DAFM formula to produce
     the estate score.
 
     Args:
         segments: List of PlatformSegment objects (one per assessed platform).
-        effective_weights: Pillar weight mapping from the FORGE profile.
-        effective_floors: Pillar floor mapping from the FORGE profile.
+        effective_weights: Pillar weight mapping from the DAFM profile.
+        effective_floors: Pillar floor mapping from the DAFM profile.
         metadata: Assessment metadata (customer_name, timestamp, profile, etc.).
 
     Returns:

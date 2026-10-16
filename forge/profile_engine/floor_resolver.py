@@ -1,4 +1,4 @@
-"""Effective floor computation for the FORGE Profile Engine.
+"""Effective floor computation for the DAFM Profile Engine.
 
 Computes per-pillar effective floor thresholds from a ForgeProfile declaration.
 The algorithm: for each pillar, take max(BASELINE_FLOOR, max override across all

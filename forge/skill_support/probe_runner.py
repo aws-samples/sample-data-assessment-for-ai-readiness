@@ -1,5 +1,5 @@
 """
-FORGE 2.1 — Skill Support: Probe Runner
+DAFM — Skill Support: Probe Runner
 
 Bridge between the Kiro Skill and the Relevance Engine. Provides high-level
 functions for probing an AWS account and validating provisioned services,

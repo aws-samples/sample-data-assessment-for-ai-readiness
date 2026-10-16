@@ -45,7 +45,7 @@ FIXTURE_CSV = str(
 
 @pytest.fixture
 def test_profile() -> ForgeProfile:
-    """A realistic FORGE profile for testing."""
+    """A realistic DAFM profile for testing."""
     return ForgeProfile(
         architecture=Architecture.HYBRID,
         workload=Workload.MULTI_TOOL_AGENTS,

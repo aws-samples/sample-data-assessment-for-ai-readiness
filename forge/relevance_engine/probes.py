@@ -1,5 +1,5 @@
 """
-FORGE 2.1 — Relevance Engine: Service Probes
+DAFM — Relevance Engine: Service Probes
 
 Defines the PROBE_REGISTRY mapping each AWS service to a lightweight
 list/describe API call, and provides concurrent probe execution.

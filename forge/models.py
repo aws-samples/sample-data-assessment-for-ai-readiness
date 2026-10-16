@@ -1,5 +1,5 @@
 """
-FORGE 2.3 Assessment Workbench — Domain Data Models
+DAFM Assessment Workbench — Domain Data Models
 
 Core domain objects used across all modules: enums for classification states,
 dataclasses for probe results, validation signals, criterion definitions,
@@ -31,7 +31,7 @@ class CriterionType(Enum):
 
 
 class ReadinessBand(Enum):
-    """FORGE readiness band classification tiers."""
+    """DAFM readiness band classification tiers."""
     UNREADY = "UNREADY"
     FOUNDATIONAL = "FOUNDATIONAL"
     GOVERNED = "GOVERNED"
@@ -63,7 +63,7 @@ class ValidationResult:
 
 @dataclass
 class CriterionDefinition:
-    """Definition of a single FORGE criterion with its type and service dependencies."""
+    """Definition of a single DAFM criterion with its type and service dependencies."""
     pillar: str  # "P1" through "P9"
     index: int
     name: str
@@ -107,7 +107,7 @@ class CriterionResult:
 
 @dataclass
 class PillarScore:
-    """Aggregated score for a single FORGE pillar."""
+    """Aggregated score for a single DAFM pillar."""
     code: str
     name: str
     raw_score: float  # 0.0 - 100.0
@@ -119,7 +119,7 @@ class PillarScore:
 
 @dataclass
 class ForgeAssessmentResult:
-    """Complete FORGE assessment output containing all pillar scores and metadata."""
+    """Complete DAFM assessment output containing all pillar scores and metadata."""
     metadata: dict
     pillars: list[PillarScore]
     summary: dict
@@ -132,7 +132,7 @@ class ForgeAssessmentResult:
         mapping string enum values back to their enum types.
 
         Args:
-            data: Dictionary loaded from a FORGE assessment JSON file.
+            data: Dictionary loaded from a DAFM assessment JSON file.
 
         Returns:
             A fully reconstructed ForgeAssessmentResult instance.
@@ -244,7 +244,7 @@ class EstateAssessmentResult:
     segments: list[PlatformSegment]         # One per platform
     merged_pillars: list[PillarScore]       # Estate-level pillar scores
     merged_criteria: list[CriterionSegmentResult]  # Estate-level merged criteria
-    estate_score: float                     # Combined FORGE score
+    estate_score: float                     # Combined DAFM score
     estate_band: ReadinessBand              # Band classification
     estate_raw_score: float
     estate_coverage_multiplier: float

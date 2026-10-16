@@ -1,7 +1,7 @@
-"""Pure SVG trend chart generator for the FORGE Score trend visualization.
+"""Pure SVG trend chart generator for the DAFM Score trend visualization.
 
 Generates an HTML <div> with an inline SVG line chart that plots
-FORGE Score over time, including band boundary lines and color-coded
+DAFM Score over time, including band boundary lines and color-coded
 last segment indicating trend direction. Works fully offline with
 zero external dependencies.
 """
@@ -87,7 +87,7 @@ def generate_trend_section(
 
     Produces a <div> containing:
     - Delta summary header (score change, improved/regressed counts)
-    - Pure SVG line chart plotting FORGE Score (0-100) against assessment dates
+    - Pure SVG line chart plotting DAFM Score (0-100) against assessment dates
     - Dashed horizontal band boundary lines at 25, 50, 75, 90
     - Color-coded last segment (green=improving, red=declining/stable)
     - Data point circles with score value labels

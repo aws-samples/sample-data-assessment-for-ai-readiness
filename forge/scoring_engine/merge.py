@@ -1,5 +1,5 @@
 """
-FORGE 2.4 — Criteria Merge Engine
+DAFM — Criteria Merge Engine
 
 Combines criterion results from multiple platform segments into estate-level
 scores using type-aware logic:
@@ -88,10 +88,10 @@ def compute_estate_score(
     effective_weights: dict[str, float],
     effective_floors: dict[str, int],
 ) -> tuple[float, ReadinessBand, float, float]:
-    """Compute estate FORGE score from merged criteria.
+    """Compute estate DAFM score from merged criteria.
 
     Builds pillar scores from merged criteria (same logic as _build_pillar_scores
-    in collector.py), then applies the standard FORGE formula.
+    in collector.py), then applies the standard DAFM formula.
 
     Args:
         merged_criteria: Estate-level merged criterion results.

@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Skill Support: Config Generator
+DAFM — Skill Support: Config Generator
 
 Generates the relevance-config.json file consumed by the collector CLI and
 builds the fully resolved shell command for deterministic assessment execution.

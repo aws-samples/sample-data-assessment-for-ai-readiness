@@ -1,12 +1,12 @@
 """
-FORGE 2.4 — Databricks Platform Segment Producer
+DAFM — Databricks Platform Segment Producer
 
 Converts the output of the Databricks conversational skill into a complete
 PlatformSegment. This module:
   1. Filters the Databricks criteria registry by services the customer uses
   2. Maps scored criteria → CriterionSegmentResult
   3. Marks unused-service criteria as NOT_APPLICABLE
-  4. Computes per-pillar scores and applies the FORGE formula for a platform score
+  4. Computes per-pillar scores and applies the DAFM formula for a platform score
 """
 from __future__ import annotations
 
@@ -171,12 +171,12 @@ def build_databricks_segment(
            → use that score + evidence + confidence.
          - If intersecting but NOT scored → mark UNDETERMINED with score=0.0.
       3. Build per-pillar scores from the criterion results.
-      4. Apply FORGE formula for platform-level score (using effective weights/floors).
+      4. Apply DAFM formula for platform-level score (using effective weights/floors).
       5. Return PlatformSegment with all results.
 
     Args:
         state: The skill conversation state with all scored criteria.
-        profile: The declared FORGE profile for weight/floor resolution.
+        profile: The declared DAFM profile for weight/floor resolution.
 
     Returns:
         A fully-populated PlatformSegment for Databricks.
@@ -191,7 +191,7 @@ def build_databricks_segment(
     # Step 2: Compute per-pillar scores
     pillar_scores = _build_pillar_scores(criteria_results)
 
-    # Step 3: Apply FORGE formula
+    # Step 3: Apply DAFM formula
     # Only include pillars that have relevant criteria in the score map
     pillar_score_map: dict[str, float] = {}
     for ps in pillar_scores:
@@ -333,7 +333,7 @@ def _build_pillar_scores(
     Only includes pillars that have entries in the Databricks registry
     (P1, P3, P4, P5, P6, P7). Pillars where ALL criteria are NOT_APPLICABLE
     get raw_score=0.0 and relevant_count=0, which signals exclusion from the
-    FORGE formula (Requirement 1.3).
+    DAFM formula (Requirement 1.3).
 
     Computes raw_score as:
         (sum of relevant criterion scores / relevant_count) * 100

@@ -1,5 +1,5 @@
 """
-FORGE 2.3 Intelligent Collector — Orchestrator
+DAFM Intelligent Collector — Orchestrator
 
 Replaces the monolithic forge_collector.py with a modular pipeline:
   Probe → Validate → Classify → Score → Output
@@ -92,7 +92,7 @@ def run_assessment(
     relevance_config: RelevanceConfig = None,
     profile_name: str = None,
 ) -> ForgeAssessmentResult:
-    """Execute a FORGE 2.3 assessment.
+    """Execute a DAFM assessment.
 
     Two modes of operation:
 
@@ -107,7 +107,7 @@ def run_assessment(
         account_id: 12-digit AWS account ID being assessed.
         region: AWS region to assess.
         profile_path: Path to the forge_profile.yaml file (contains the locked
-            FORGE Profile declaration).
+            DAFM Profile declaration).
         customer_name: Display name for the assessment target.
         relevance_config: Pre-computed relevance config from Kiro Skill.
             If provided, skips probe/validate/detect phases.
@@ -118,7 +118,7 @@ def run_assessment(
     """
     start_time = datetime.now(timezone.utc)
 
-    # Load and resolve the FORGE Profile
+    # Load and resolve the DAFM Profile
     profile = load_profile(profile_path)
     resolved = resolve_profile(profile)
     effective_weights = resolved.effective_weights
@@ -142,7 +142,7 @@ def run_assessment(
     # Compute pillar percentage map for formula
     pillar_pct_map = {p.code: p.raw_score for p in pillars}
 
-    # Apply FORGE score formula using profile-derived weights and floors
+    # Apply DAFM score formula using profile-derived weights and floors
     raw_score = compute_raw_score(pillar_pct_map, effective_weights)
     coverage_multiplier = compute_coverage_multiplier(pillar_pct_map, effective_floors)
 

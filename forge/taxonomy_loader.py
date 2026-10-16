@@ -1,5 +1,5 @@
 """
-FORGE — Tag Taxonomy Loader
+DAFM — Tag Taxonomy Loader
 
 Loads the authoritative tagging taxonomy (``forge_config/tag_taxonomy.yaml``,
 v0.2) that describes:

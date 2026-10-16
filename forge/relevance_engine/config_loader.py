@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Relevance Configuration Loader
+DAFM — Relevance Configuration Loader
 
 Loads the pre-computed relevance configuration JSON produced by the Kiro Skill
 (via config_generator.py) and maps it into internal model types for the

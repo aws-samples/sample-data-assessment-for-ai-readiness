@@ -1,4 +1,4 @@
-"""FORGE Trend Visualizer — generates trend chart data and HTML section for the dashboard.
+"""DAFM Trend Visualizer — generates trend chart data and HTML section for the dashboard.
 
 Public API:
     - TrendDataPoint: Single assessment data point for the trend chart
@@ -40,7 +40,7 @@ def load_history(
     """Load history data for trend visualization.
 
     Reads forge_history.jsonl via the delta engine reader, extracts
-    timestamp, FORGE Score, and Score Band for each record, and returns
+    timestamp, DAFM Score, and Score Band for each record, and returns
     at most max_points most recent assessments.
 
     Args:
@@ -63,7 +63,7 @@ def generate_trend_section(
 
     Produces a <div> containing:
     - Delta summary header (score change, improved/regressed counts)
-    - Highcharts line chart config for time-series FORGE Score
+    - Highcharts line chart config for time-series DAFM Score
     - Score_Band boundary lines at 25, 50, 75, 90
     - Color-coded last segment (green=improving, red=declining)
     - "Last assessed: <timestamp>" footer

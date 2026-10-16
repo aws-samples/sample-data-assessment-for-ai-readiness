@@ -1,5 +1,5 @@
 """
-FORGE 2.1 — Analog Scoring Functions
+DAFM — Analog Scoring Functions
 
 Scores individual criteria as either:
 - Analog (0.0–1.0): coverage ratio clamped to valid range

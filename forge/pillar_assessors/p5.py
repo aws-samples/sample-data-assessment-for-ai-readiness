@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Pillar 5: Access Control, Identity & Tenancy (17 criteria)
+DAFM — Pillar 5: Access Control, Identity & Tenancy (17 criteria)
 """
 from forge.pillar_assessors._common import get_client, safe_call, make_criterion
 

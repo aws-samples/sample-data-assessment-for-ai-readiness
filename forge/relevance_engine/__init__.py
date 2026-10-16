@@ -1,5 +1,5 @@
 """
-FORGE 2.3 — Relevance Engine Package
+DAFM — Relevance Engine Package
 
 Service discovery, validation, classification, and config loading.
 """

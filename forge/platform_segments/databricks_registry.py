@@ -1,7 +1,7 @@
 """
-FORGE 2.3 Assessment Workbench — Databricks Criteria Registry
+DAFM Assessment Workbench — Databricks Criteria Registry
 
-Source of truth for Databricks-specific FORGE criteria definitions. Each criterion
+Source of truth for Databricks-specific DAFM criteria definitions. Each criterion
 is mapped to its pillar (P1–P9), index, human-readable name, scoring type
 (analog or binary), and the Databricks services it depends on for assessment.
 

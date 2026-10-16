@@ -1,7 +1,7 @@
 """
-FORGE 2.3 — Skill Support Layer
+DAFM — Skill Support Layer
 
-Public API bridge between the Kiro Skill and the core FORGE engine modules.
+Public API bridge between the Kiro Skill and the core DAFM engine modules.
 This package provides high-level functions that the Kiro Skill calls during
 interactive assessment configuration:
 

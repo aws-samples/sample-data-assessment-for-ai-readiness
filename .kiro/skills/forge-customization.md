@@ -1,24 +1,24 @@
 ---
-name: FORGE Customization
-description: Customize FORGE assessment weights, recommendations, and partner solutions without editing Python code.
+name: DAFM Customization
+description: Customize DAFM assessment weights, recommendations, and partner solutions without editing Python code.
 ---
 
-# FORGE Customization Skill
+# DAFM Customization Skill
 
-Help partners customize the FORGE assessment framework by editing YAML configuration files in `forge_config/`.
+Help partners customize the DAFM assessment framework by editing YAML configuration files in `forge_config/`.
 
 ## What Can Be Customized
 
 ### 1. IAM Role Permissions
 **File:** `forge/role_provisioner/cfn_template.yaml`
 
-The FORGE assessment role uses a **least-privilege** model — each API action is explicitly granted. When you add new criteria, assessors, or probes that call additional AWS APIs, the CFN template must be updated to include those actions.
+The DAFM assessment role uses a **least-privilege** model — each API action is explicitly granted. When you add new criteria, assessors, or probes that call additional AWS APIs, the CFN template must be updated to include those actions.
 
 ### 2. Weights & Shift Vectors
 **File:** `forge_config/weights.yaml`
 
 Partners can adjust:
-- **Base pillar weights** (must sum to 100) — controls how much each pillar contributes to the overall FORGE score
+- **Base pillar weights** (must sum to 100) — controls how much each pillar contributes to the overall DAFM score
 - **Per-dimension shift vectors** (must be zero-sum per entry) — adjusts weights based on architecture, workload, industry, and agent maturity
 - **Floor override thresholds** — minimum pillar scores before coverage penalty kicks in
 
@@ -36,7 +36,7 @@ Partners can:
 
 Partners can:
 - Register their products with a unique ID
-- Map products to applicable FORGE criteria (P1.1 through P9.12)
+- Map products to applicable DAFM criteria (P1.1 through P9.12)
 - Provide specific integration notes for AWS environments
 - Categorize solutions for easy reference
 
@@ -322,7 +322,7 @@ The roadmap output will include recommendations and partner solutions for each u
 ## Workflow: Adding Partner Recommendations
 
 1. **Register product** in `forge_config/partner_solutions.yaml`
-2. **Map criteria:** List all FORGE criteria IDs your product addresses in `applicable_criteria`
+2. **Map criteria:** List all DAFM criteria IDs your product addresses in `applicable_criteria`
 3. **Add to roadmap:** Reference your product ID in `forge_config/recommendations.yaml` under each relevant criterion's `partner_solutions` list
 4. **Run assessment:** Your product will appear in the roadmap output alongside AWS-native solutions
 
