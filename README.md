@@ -1,6 +1,6 @@
 # DAFM — Data for AI Readiness
 
-## DAFM (Data & AI Fitness Model) Assessment Workbench
+## DAFM (Data-for-AI Fitness Model) Assessment Workbench
 
 Continuous diagnostic and improvement framework that scores your data estate readiness for agentic AI workloads. Produces a 0–100 readiness score from criteria across 9 pillars, shaped by a customer-specific DAFM Profile.
 
