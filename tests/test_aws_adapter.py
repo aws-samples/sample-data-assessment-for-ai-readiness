@@ -1,18 +1,18 @@
-"""Unit tests for forge.platform_segments.aws_adapter."""
+"""Unit tests for dafm.platform_segments.aws_adapter."""
 
 import pytest
 
-from forge.models import (
+from dafm.models import (
     AnalogDetail,
     CriterionResult,
     CriterionSegmentResult,
     CriterionType,
-    ForgeAssessmentResult,
+    DafmAssessmentResult,
     PillarScore,
     PlatformSegment,
     RelevanceStatus,
 )
-from forge.platform_segments.aws_adapter import wrap_aws_result
+from dafm.platform_segments.aws_adapter import wrap_aws_result
 
 
 # --- Fixtures ---
@@ -82,8 +82,8 @@ def not_applicable_criterion() -> CriterionResult:
 @pytest.fixture
 def sample_assessment(
     binary_criterion, binary_criterion_failed, analog_criterion, not_applicable_criterion
-) -> ForgeAssessmentResult:
-    """A minimal ForgeAssessmentResult with mixed criterion types."""
+) -> DafmAssessmentResult:
+    """A minimal DafmAssessmentResult with mixed criterion types."""
     pillar_p1 = PillarScore(
         code="P1",
         name="Agent Access & Discovery",
@@ -102,7 +102,7 @@ def sample_assessment(
         undetermined_count=0,
         criteria=[not_applicable_criterion],
     )
-    return ForgeAssessmentResult(
+    return DafmAssessmentResult(
         metadata={
             "account_id": "123456789012",
             "region": "us-east-1",
@@ -112,7 +112,7 @@ def sample_assessment(
         },
         pillars=[pillar_p1, pillar_p3],
         summary={
-            "forge_score": 58.3,
+            "dafm_score": 58.3,
             "readiness_band": "GOVERNED",
             "raw_score": 62.0,
             "coverage_multiplier": 0.94,
@@ -240,10 +240,10 @@ class TestWrapAwsResult:
 class TestEdgeCases:
     def test_empty_pillars(self):
         """Assessment with no pillars produces segment with empty criteria."""
-        result = ForgeAssessmentResult(
+        result = DafmAssessmentResult(
             metadata={"customer_name": "Empty"},
             pillars=[],
-            summary={"forge_score": 0.0},
+            summary={"dafm_score": 0.0},
         )
         segment = wrap_aws_result(result)
         assert segment.criteria == []
@@ -267,7 +267,7 @@ class TestEdgeCases:
                 )
             ],
         )
-        result = ForgeAssessmentResult(
+        result = DafmAssessmentResult(
             metadata={}, pillars=[pillar], summary={},
         )
         segment = wrap_aws_result(result)
@@ -293,7 +293,7 @@ class TestEdgeCases:
                 )
             ],
         )
-        result = ForgeAssessmentResult(
+        result = DafmAssessmentResult(
             metadata={}, pillars=[pillar], summary={},
         )
         segment = wrap_aws_result(result)

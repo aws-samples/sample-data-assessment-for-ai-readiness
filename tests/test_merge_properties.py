@@ -23,7 +23,7 @@ from hypothesis.strategies import (
     text,
 )
 
-from forge.models import (
+from dafm.models import (
     AnalogDetail,
     CriterionSegmentResult,
     CriterionType,
@@ -31,7 +31,7 @@ from forge.models import (
     PlatformSegment,
     RelevanceStatus,
 )
-from forge.scoring_engine.merge import merge_criteria, _build_pillar_scores_from_merged
+from dafm.scoring_engine.merge import merge_criteria, _build_pillar_scores_from_merged
 
 
 # ─── Strategies ────────────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ def platform_segment(draw, platform=None, criteria=None):
         source_type="api_discovery",
         pillars=[],  # Not needed for merge_criteria
         criteria=all_criteria,
-        summary={"forge_score": 50.0, "band": "GOVERNED"},
+        summary={"dafm_score": 50.0, "band": "GOVERNED"},
         metadata={},
     )
 

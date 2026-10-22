@@ -1,12 +1,12 @@
 """
-Unit tests for forge.relevance_engine.classifier module.
+Unit tests for dafm.relevance_engine.classifier module.
 
 Tests criterion relevance classification based on probe and validation results.
 Uses OR-semantics: at least one active service = RELEVANT.
 """
 import pytest
-from forge.relevance_engine.classifier import classify_criterion_relevance
-from forge.models import (
+from dafm.relevance_engine.classifier import classify_criterion_relevance
+from dafm.models import (
     ProbeResult,
     ValidationResult,
     ServiceClassification,
@@ -317,7 +317,7 @@ class TestNoCLICoupling:
     """Verify the module has no CLI dependencies."""
 
     def test_no_argparse_or_sys_exit(self):
-        import forge.relevance_engine.classifier as mod
+        import dafm.relevance_engine.classifier as mod
         import inspect
 
         source = inspect.getsource(mod)

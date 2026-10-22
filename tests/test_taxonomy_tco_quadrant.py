@@ -1,16 +1,16 @@
 """Tests for the DAFM tag taxonomy, TCO indicator, model round-trip, and
 the additive AI-readiness quadrant dashboard section."""
 
-from forge.dashboard.generator import _generate_quadrant_section
-from forge.models import CriterionDefinition, CriterionType, ForgeAssessmentResult
-from forge.taxonomy_loader import (
+from dafm.dashboard.generator import _generate_quadrant_section
+from dafm.models import CriterionDefinition, CriterionType, DafmAssessmentResult
+from dafm.taxonomy_loader import (
     get_pillar_tags,
     list_frameworks,
     list_tensions,
     list_vectors,
     load_taxonomy,
 )
-from forge.tco import compute_tco
+from dafm.tco import compute_tco
 
 
 class TestComputeTco:
@@ -54,7 +54,7 @@ class TestFromDictRoundTrip:
                     "criteria": [criterion],
                 }
             ],
-            "summary": {"forge_score": 50},
+            "summary": {"dafm_score": 50},
         }
 
     def test_legacy_criterion_without_new_fields_loads(self):
@@ -67,7 +67,7 @@ class TestFromDictRoundTrip:
             "evidence": "found",
             "criterion_type": "binary",
         })
-        result = ForgeAssessmentResult.from_dict(payload)
+        result = DafmAssessmentResult.from_dict(payload)
         c = result.pillars[0].criteria[0]
         # Defaults applied, no error.
         assert c.cost == ""
@@ -93,7 +93,7 @@ class TestFromDictRoundTrip:
             "vectors": ["fine_grained_access_control", "governance"],
             "compliance": ["GDPR", "HIPAA"],
         })
-        result = ForgeAssessmentResult.from_dict(payload)
+        result = DafmAssessmentResult.from_dict(payload)
         c = result.pillars[0].criteria[0]
         assert c.cost == "medium"
         assert c.operational_overhead == "low"

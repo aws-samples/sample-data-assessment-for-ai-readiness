@@ -1,5 +1,5 @@
 """
-Unit tests for forge.relevance_config_loader module.
+Unit tests for dafm.relevance_config_loader module.
 
 Tests JSON loading, schema validation, and mapping to internal model types.
 """
@@ -7,8 +7,8 @@ import json
 import pytest
 from pathlib import Path
 
-from forge.relevance_config_loader import load_relevance_config
-from forge.models import RelevanceConfig, RelevanceStatus
+from dafm.relevance_config_loader import load_relevance_config
+from dafm.models import RelevanceConfig, RelevanceStatus
 
 
 @pytest.fixture

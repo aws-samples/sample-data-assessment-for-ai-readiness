@@ -20,7 +20,7 @@
     "agent_maturity": "single_agent_prod"
   },
   "scoring": {
-    "forge_score": 54.0,
+    "dafm_score": 54.0,
     "band": "GOVERNED",
     "raw_score": 54.0,
     "coverage_multiplier": 1.0,

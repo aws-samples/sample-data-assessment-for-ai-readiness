@@ -6,7 +6,7 @@ import pytest
 from unittest.mock import patch
 from datetime import datetime, timezone
 
-from forge.models import (
+from dafm.models import (
     RelevanceStatus,
     CriterionType,
     ReadinessBand,
@@ -16,7 +16,7 @@ from forge.models import (
     EstateAssessmentResult,
     AnalogDetail,
 )
-from forge.collector import _write_estate_roadmap_md
+from dafm.collector import _write_estate_roadmap_md
 
 
 def _make_criterion_segment(
@@ -54,7 +54,7 @@ def _make_pillar_score(code, name, raw_score=50.0, criteria=None):
     )
 
 
-def _make_segment(platform, forge_score, criteria, pillars=None):
+def _make_segment(platform, dafm_score, criteria, pillars=None):
     """Helper to build a PlatformSegment."""
     if pillars is None:
         # Derive pillar names from criteria
@@ -77,7 +77,7 @@ def _make_segment(platform, forge_score, criteria, pillars=None):
         source_type="api_discovery" if platform == "aws" else "conversational",
         pillars=pillars,
         criteria=criteria,
-        summary={"forge_score": forge_score, "readiness_band": "GOVERNED"},
+        summary={"dafm_score": dafm_score, "readiness_band": "GOVERNED"},
         metadata={},
     )
 
@@ -119,19 +119,19 @@ class TestEstateRoadmapMdHeader:
         segments = [_make_segment("aws", 68.5, aws_criteria)]
         result = _make_estate_result(segments, estate_score=68.5, estate_band=ReadinessBand.GOVERNED)
 
-        with patch("forge.collector.datetime") as mock_dt:
+        with patch("dafm.collector.datetime") as mock_dt:
             mock_dt.now.return_value = datetime(2026, 7, 20, 14, 30, 0, tzinfo=timezone.utc)
             mock_dt.side_effect = lambda *a, **k: datetime(*a, **k)
             os.chdir(tmp_path)
             _write_estate_roadmap_md(result, {"P1": 18.5})
 
         # Find the written file
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         assert len(files) == 1
 
         content = files[0].read_text()
-        assert "# FORGE Estate Remediation Roadmap" in content
+        assert "# DAFM Estate Remediation Roadmap" in content
         assert "**Estate Score:** 68.5 (GOVERNED)" in content
 
     def test_header_shows_per_platform_scores(self, tmp_path):
@@ -150,8 +150,8 @@ class TestEstateRoadmapMdHeader:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5, "P4": 15.0})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "AWS (68.5)" in content
@@ -177,8 +177,8 @@ class TestPlatformGrouping:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5, "P4": 15.0})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "## AWS Remediation" in content
@@ -197,8 +197,8 @@ class TestPlatformGrouping:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5, "P4": 15.0})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         # P1 criteria should come before P4 criteria
@@ -226,8 +226,8 @@ class TestCriterionFiltering:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "Met criterion" not in content
@@ -245,8 +245,8 @@ class TestCriterionFiltering:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "N/A criterion" not in content
@@ -266,8 +266,8 @@ class TestDatabricksServiceReferences:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P4": 15.0})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         # P4.2 maps to delta_live_tables → "Delta Live Tables"
@@ -283,8 +283,8 @@ class TestDatabricksServiceReferences:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         # No Databricks service references for AWS criteria
@@ -306,8 +306,8 @@ class TestEvidenceDisplay:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "Evidence: Only 30% of tables cataloged" in content
@@ -323,8 +323,8 @@ class TestEvidenceDisplay:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "Evidence: No evidence" not in content
@@ -343,8 +343,8 @@ class TestNoGapsPlatform:
         os.chdir(tmp_path)
         _write_estate_roadmap_md(result, {"P1": 18.5})
 
-        roadmap_dir = tmp_path / "forge_output" / "roadmaps"
-        files = list(roadmap_dir.glob("forge_estate_roadmap_*.md"))
+        roadmap_dir = tmp_path / "dafm_output" / "roadmaps"
+        files = list(roadmap_dir.glob("dafm_estate_roadmap_*.md"))
         content = files[0].read_text()
 
         assert "No unmet criteria" in content

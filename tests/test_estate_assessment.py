@@ -1,5 +1,5 @@
 """
-Unit tests for run_estate_assessment in forge/collector.py.
+Unit tests for run_estate_assessment in dafm/collector.py.
 
 Tests that the collector correctly merges platform segments into an
 EstateAssessmentResult and writes the estate JSON artifact.
@@ -16,7 +16,7 @@ from unittest.mock import patch
 
 import pytest
 
-from forge.models import (
+from dafm.models import (
     AnalogDetail,
     CriterionSegmentResult,
     CriterionType,
@@ -26,7 +26,7 @@ from forge.models import (
     ReadinessBand,
     RelevanceStatus,
 )
-from forge.collector import run_estate_assessment, _write_estate_json, _append_estate_history_record
+from dafm.collector import run_estate_assessment, _write_estate_json, _append_estate_history_record
 
 
 # ─── Fixtures ──────────────────────────────────────────────────────────────────
@@ -82,7 +82,7 @@ def _make_segment(platform: str, criteria: list[CriterionSegmentResult]) -> Plat
         source_type="api_discovery" if platform == "aws" else "conversational",
         pillars=pillars,
         criteria=criteria,
-        summary={"forge_score": 60.0, "readiness_band": "GOVERNED"},
+        summary={"dafm_score": 60.0, "readiness_band": "GOVERNED"},
         metadata={"platform": platform},
     )
 
@@ -220,8 +220,8 @@ class TestWriteEstateJson:
             _write_estate_json(result, weights, floors)
 
             # Find the written file
-            assessments_dir = tmp_path / "forge_output" / "assessments"
-            json_files = list(assessments_dir.glob("forge_estate_assessment_*.json"))
+            assessments_dir = tmp_path / "dafm_output" / "assessments"
+            json_files = list(assessments_dir.glob("dafm_estate_assessment_*.json"))
             assert len(json_files) == 1
 
             with open(json_files[0]) as f:
@@ -237,7 +237,7 @@ class TestWriteEstateJson:
             assert "merged_criteria" in data
 
             # Verify estate section
-            assert data["estate"]["forge_score"] == 72.5
+            assert data["estate"]["dafm_score"] == 72.5
             assert data["estate"]["score_band"] == "GOVERNED"
             assert data["estate"]["raw_score"] == 75.0
             assert data["estate"]["coverage_multiplier"] == 0.967
@@ -255,7 +255,7 @@ class TestWriteEstateJson:
 
 
 def _create_test_profile(tmp_path: Path) -> Path:
-    """Create a minimal forge_profile.yaml for testing."""
+    """Create a minimal dafm_profile.yaml for testing."""
     profile_content = """profile:
   architecture: hybrid
   workload: multi_tool_agents
@@ -263,7 +263,7 @@ def _create_test_profile(tmp_path: Path) -> Path:
   agent_maturity: single_agent_prod
 locked: true
 """
-    profile_path = tmp_path / "forge_profile.yaml"
+    profile_path = tmp_path / "dafm_profile.yaml"
     profile_path.write_text(profile_content)
     return profile_path
 
@@ -275,8 +275,8 @@ class TestAppendEstateHistoryRecord:
     """
 
     def _make_profile(self, tmp_path: Path):
-        """Create and load a ForgeProfile for testing."""
-        from forge.profile_engine import load_profile
+        """Create and load a DafmProfile for testing."""
+        from dafm.profile_engine import load_profile
         profile_path = _create_test_profile(tmp_path)
         return load_profile(profile_path)
 
@@ -318,16 +318,16 @@ class TestAppendEstateHistoryRecord:
         try:
             _append_estate_history_record(result, profile)
 
-            history_file = tmp_path / "forge_output" / "forge_history.jsonl"
+            history_file = tmp_path / "dafm_output" / "dafm_history.jsonl"
             assert history_file.exists()
 
             with open(history_file) as f:
                 record = json.loads(f.readline())
 
-            # Should use forge_score/score_band keys
-            assert "forge_score" in record
+            # Should use dafm_score/score_band keys
+            assert "dafm_score" in record
             assert "score_band" in record
-            assert record["forge_score"] == 59.8
+            assert record["dafm_score"] == 59.8
             assert record["score_band"] == "GOVERNED"
 
             # Should NOT include multi-platform fields
@@ -352,9 +352,9 @@ class TestAppendEstateHistoryRecord:
         dbx_criteria = [_make_criterion("P1", 1, 0.0, "databricks")]
         aws_segment = _make_segment("aws", aws_criteria)
         dbx_segment = _make_segment("databricks", dbx_criteria)
-        # Override the summary forge_scores to test platform_scores extraction
-        aws_segment.summary["forge_score"] = 68.5
-        dbx_segment.summary["forge_score"] = 47.2
+        # Override the summary dafm_scores to test platform_scores extraction
+        aws_segment.summary["dafm_score"] = 68.5
+        dbx_segment.summary["dafm_score"] = 47.2
 
         result = self._make_estate_result([aws_segment, dbx_segment])
 
@@ -363,7 +363,7 @@ class TestAppendEstateHistoryRecord:
         try:
             _append_estate_history_record(result, profile)
 
-            history_file = tmp_path / "forge_output" / "forge_history.jsonl"
+            history_file = tmp_path / "dafm_output" / "dafm_history.jsonl"
             assert history_file.exists()
 
             with open(history_file) as f:
@@ -374,7 +374,7 @@ class TestAppendEstateHistoryRecord:
             assert record["estate_band"] == "GOVERNED"
 
             # Should include backward compat aliases
-            assert record["forge_score"] == 59.8
+            assert record["dafm_score"] == 59.8
             assert record["score_band"] == "GOVERNED"
 
             # Should include per-platform scores
@@ -391,7 +391,7 @@ class TestAppendEstateHistoryRecord:
             os.chdir(original_cwd)
 
     def test_history_record_appends_not_overwrites(self, tmp_path):
-        """Multiple calls append separate lines to forge_history.jsonl."""
+        """Multiple calls append separate lines to dafm_history.jsonl."""
         profile = self._make_profile(tmp_path)
 
         criteria = [_make_criterion("P1", 1, 1.0, "aws")]
@@ -404,14 +404,14 @@ class TestAppendEstateHistoryRecord:
             _append_estate_history_record(result, profile)
             _append_estate_history_record(result, profile)
 
-            history_file = tmp_path / "forge_output" / "forge_history.jsonl"
+            history_file = tmp_path / "dafm_output" / "dafm_history.jsonl"
             lines = history_file.read_text().strip().split("\n")
             assert len(lines) == 2
 
             # Both should be valid JSON
             for line in lines:
                 record = json.loads(line)
-                assert "forge_score" in record
+                assert "dafm_score" in record
         finally:
             os.chdir(original_cwd)
 
@@ -428,7 +428,7 @@ class TestAppendEstateHistoryRecord:
         try:
             _append_estate_history_record(result, profile)
 
-            history_file = tmp_path / "forge_output" / "forge_history.jsonl"
+            history_file = tmp_path / "dafm_output" / "dafm_history.jsonl"
             with open(history_file) as f:
                 record = json.loads(f.readline())
 

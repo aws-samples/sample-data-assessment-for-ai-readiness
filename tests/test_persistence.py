@@ -1,18 +1,18 @@
-"""Tests for forge/profile_engine/persistence.py — YAML read/write and lock."""
+"""Tests for dafm/profile_engine/persistence.py — YAML read/write and lock."""
 
 from pathlib import Path
 
 import pytest
 import yaml
 
-from forge.profile_engine import ForgeProfile
-from forge.profile_engine.dimensions import (
+from dafm.profile_engine import DafmProfile
+from dafm.profile_engine.dimensions import (
     AgentMaturity,
     Architecture,
     Industry,
     Workload,
 )
-from forge.profile_engine.persistence import (
+from dafm.profile_engine.persistence import (
     ProfileLockError,
     ProfileNotFoundError,
     is_locked,
@@ -22,8 +22,8 @@ from forge.profile_engine.persistence import (
 
 
 @pytest.fixture
-def sample_profile() -> ForgeProfile:
-    return ForgeProfile(
+def sample_profile() -> DafmProfile:
+    return DafmProfile(
         architecture=Architecture.OPEN_LAKEHOUSE,
         workload=Workload.MULTI_TOOL_AGENTS,
         industry=Industry.FINANCIAL_SERVICES,
@@ -33,12 +33,12 @@ def sample_profile() -> ForgeProfile:
 
 @pytest.fixture
 def profile_path(tmp_path: Path) -> Path:
-    return tmp_path / "forge_profile.yaml"
+    return tmp_path / "dafm_profile.yaml"
 
 
 class TestSaveProfile:
     def test_writes_yaml_with_locked_true(
-        self, sample_profile: ForgeProfile, profile_path: Path
+        self, sample_profile: DafmProfile, profile_path: Path
     ):
         save_profile(sample_profile, profile_path)
 
@@ -51,7 +51,7 @@ class TestSaveProfile:
         assert data["profile"]["agent_maturity"] == "single_agent_prod"
 
     def test_raises_profile_lock_error_when_already_locked(
-        self, sample_profile: ForgeProfile, profile_path: Path
+        self, sample_profile: DafmProfile, profile_path: Path
     ):
         save_profile(sample_profile, profile_path)
 
@@ -59,7 +59,7 @@ class TestSaveProfile:
             save_profile(sample_profile, profile_path)
 
     def test_locked_at_is_iso_utc_format(
-        self, sample_profile: ForgeProfile, profile_path: Path
+        self, sample_profile: DafmProfile, profile_path: Path
     ):
         save_profile(sample_profile, profile_path)
 
@@ -72,7 +72,7 @@ class TestSaveProfile:
 
 class TestLoadProfile:
     def test_loads_saved_profile_correctly(
-        self, sample_profile: ForgeProfile, profile_path: Path
+        self, sample_profile: DafmProfile, profile_path: Path
     ):
         save_profile(sample_profile, profile_path)
         loaded = load_profile(profile_path)
@@ -90,7 +90,7 @@ class TestLoadProfile:
 
     def test_round_trip_preserves_all_dimensions(self, profile_path: Path):
         """Save then load should produce identical profile values."""
-        original = ForgeProfile(
+        original = DafmProfile(
             architecture=Architecture.HYBRID,
             workload=Workload.RAG_RETRIEVAL,
             industry=Industry.HEALTHCARE,
@@ -110,7 +110,7 @@ class TestIsLocked:
         assert is_locked(profile_path) is False
 
     def test_returns_true_after_save(
-        self, sample_profile: ForgeProfile, profile_path: Path
+        self, sample_profile: DafmProfile, profile_path: Path
     ):
         save_profile(sample_profile, profile_path)
         assert is_locked(profile_path) is True

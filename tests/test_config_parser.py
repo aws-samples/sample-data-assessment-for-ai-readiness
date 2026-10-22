@@ -1,12 +1,12 @@
-"""Unit tests for forge.document_ingest.config_parser."""
+"""Unit tests for dafm.document_ingest.config_parser."""
 
 import os
 import tempfile
 
 import pytest
 
-from forge.document_ingest import DocumentEvidence
-from forge.document_ingest.config_parser import parse_config_export
+from dafm.document_ingest import DocumentEvidence
+from dafm.document_ingest.config_parser import parse_config_export
 
 
 # --- Fixtures ---
@@ -181,7 +181,7 @@ class TestImportViaInit:
     """Test that parse_config_export is accessible via the __init__ re-export."""
 
     def test_import_from_package(self, txt_file_with_evidence):
-        """parse_config_export is importable from forge.document_ingest."""
-        from forge.document_ingest import parse_config_export as fn
+        """parse_config_export is importable from dafm.document_ingest."""
+        from dafm.document_ingest import parse_config_export as fn
         result = fn(txt_file_with_evidence)
         assert len(result) > 0

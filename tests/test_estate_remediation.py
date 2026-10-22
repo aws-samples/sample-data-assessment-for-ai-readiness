@@ -2,7 +2,7 @@
 
 import pytest
 
-from forge.dashboard.generator import _generate_estate_remediation_html
+from dafm.dashboard.generator import _generate_estate_remediation_html
 
 
 def _make_criterion(pillar, index, name, score, platform, relevance_status="RELEVANT"):

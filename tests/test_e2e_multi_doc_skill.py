@@ -14,24 +14,24 @@ from pathlib import Path
 
 import pytest
 
-from forge.platform_segments.databricks_segment import (
+from dafm.platform_segments.databricks_segment import (
     SkillConversationState,
     build_databricks_segment,
 )
-from forge.skill_support.databricks_skill import (
+from dafm.skill_support.databricks_skill import (
     advance_skill_phase,
     get_initial_prompt,
     parse_uploaded_documents,
     summarize_findings,
 )
-from forge.profile_engine import ForgeProfile
-from forge.profile_engine.dimensions import (
+from dafm.profile_engine import DafmProfile
+from dafm.profile_engine.dimensions import (
     AgentMaturity,
     Architecture,
     Industry,
     Workload,
 )
-from forge.models import PlatformSegment, RelevanceStatus
+from dafm.models import PlatformSegment, RelevanceStatus
 
 
 FIXTURE_DIR = Path(__file__).parent / "fixtures"
@@ -40,8 +40,8 @@ ARCH_DOC = str(FIXTURE_DIR / "databricks_workspace_description.txt")
 
 
 @pytest.fixture
-def test_profile() -> ForgeProfile:
-    return ForgeProfile(
+def test_profile() -> DafmProfile:
+    return DafmProfile(
         architecture=Architecture.HYBRID,
         workload=Workload.MULTI_TOOL_AGENTS,
         industry=Industry.FINANCIAL_SERVICES,
@@ -129,7 +129,7 @@ class TestMultiDocumentSkillFlow:
         print(f"\n{'='*60}")
         print(f"DATABRICKS PLATFORM SEGMENT")
         print(f"{'='*60}")
-        print(f"FORGE Score: {segment.summary['forge_score']:.1f}")
+        print(f"DAFM Score: {segment.summary['dafm_score']:.1f}")
         print(f"Readiness Band: {segment.summary['readiness_band']}")
         print(f"Raw Score: {segment.summary['raw_score']:.2f}")
         print(f"Coverage Multiplier: {segment.summary['coverage_multiplier']:.4f}")
@@ -152,8 +152,8 @@ class TestMultiDocumentSkillFlow:
         # Assertions
         assert isinstance(segment, PlatformSegment)
         assert segment.platform == "databricks"
-        assert segment.summary["forge_score"] > 0
+        assert segment.summary["dafm_score"] > 0
         # With both docs + positive answers, should be a reasonable score
-        assert segment.summary["forge_score"] > 30  # Should get above UNREADY
+        assert segment.summary["dafm_score"] > 30  # Should get above UNREADY
 
         return segment

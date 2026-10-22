@@ -4,7 +4,7 @@ Generate a multi-platform estate dashboard using:
   - Past AWS assessment results (no re-probe)
   - Databricks skill output from fixture documents
 
-Produces: forge_output/forge_estate_dashboard.html
+Produces: dafm_output/dafm_estate_dashboard.html
 """
 import json
 import sys
@@ -13,28 +13,28 @@ from pathlib import Path
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from forge.models import (
+from dafm.models import (
     CriterionResult,
     CriterionType,
-    ForgeAssessmentResult,
+    DafmAssessmentResult,
     PillarScore,
     PlatformSegment,
     RelevanceStatus,
     ReadinessBand,
 )
-from forge.platform_segments.aws_adapter import wrap_aws_result
-from forge.platform_segments.databricks_segment import (
+from dafm.platform_segments.aws_adapter import wrap_aws_result
+from dafm.platform_segments.databricks_segment import (
     SkillConversationState,
     build_databricks_segment,
 )
-from forge.scoring_engine.merge import merge_criteria, compute_estate_score
-from forge.scoring_engine.merge import _build_pillar_scores_from_merged
-from forge.skill_support.databricks_skill import (
+from dafm.scoring_engine.merge import merge_criteria, compute_estate_score
+from dafm.scoring_engine.merge import _build_pillar_scores_from_merged
+from dafm.skill_support.databricks_skill import (
     advance_skill_phase,
     parse_uploaded_documents,
 )
-from forge.profile_engine import ForgeProfile, load_profile, resolve_profile
-from forge.profile_engine.dimensions import (
+from dafm.profile_engine import DafmProfile, load_profile, resolve_profile
+from dafm.profile_engine.dimensions import (
     AgentMaturity,
     Architecture,
     Industry,
@@ -45,29 +45,29 @@ from forge.profile_engine.dimensions import (
 # ─── Paths ─────────────────────────────────────────────────────────────────────
 
 PROJECT_ROOT = Path(__file__).parent.parent
-PROFILE_PATH = PROJECT_ROOT / "forge_output" / "forge_profile.yaml"
+PROFILE_PATH = PROJECT_ROOT / "dafm_output" / "dafm_profile.yaml"
 BILLING_CSV = PROJECT_ROOT / "tests" / "fixtures" / "databricks_billing_usage.csv"
 ARCH_DOC = PROJECT_ROOT / "tests" / "fixtures" / "databricks_workspace_description.txt"
-OUTPUT_DIR = PROJECT_ROOT / "forge_output"
+OUTPUT_DIR = PROJECT_ROOT / "dafm_output"
 
 
 def _find_latest_aws_assessment() -> Path:
     """Find the most recent AWS assessment JSON file.
 
-    Looks for files matching forge_assessment_*.json (excluding estate files)
+    Looks for files matching dafm_assessment_*.json (excluding estate files)
     in the assessments directory and returns the most recent by filename timestamp.
-    Falls back to forge_assessment_results.json if no timestamped files exist.
+    Falls back to dafm_assessment_results.json if no timestamped files exist.
     """
-    assessments_dir = PROJECT_ROOT / "forge_output" / "assessments"
+    assessments_dir = PROJECT_ROOT / "dafm_output" / "assessments"
     candidates = sorted(
-        [f for f in assessments_dir.glob("forge_assessment_*.json")
-         if "estate" not in f.name and f.name != "forge_assessment_results.json"],
+        [f for f in assessments_dir.glob("dafm_assessment_*.json")
+         if "estate" not in f.name and f.name != "dafm_assessment_results.json"],
         reverse=True,
     )
     if candidates:
         return candidates[0]
     # Fallback: non-timestamped results file
-    fallback = assessments_dir / "forge_assessment_results.json"
+    fallback = assessments_dir / "dafm_assessment_results.json"
     if fallback.exists():
         return fallback
     raise FileNotFoundError(
@@ -86,9 +86,9 @@ def load_aws_segment() -> PlatformSegment:
         data = json.load(f)
 
     # Use from_dict for clean deserialization, then wrap as segment
-    result = ForgeAssessmentResult.from_dict(data)
+    result = DafmAssessmentResult.from_dict(data)
     segment = wrap_aws_result(result)
-    print(f"   AWS Score: {segment.summary['forge_score']} ({segment.summary['readiness_band']})")
+    print(f"   AWS Score: {segment.summary['dafm_score']} ({segment.summary['readiness_band']})")
     print(f"   Criteria: {len(segment.criteria)}")
     return segment
 
@@ -97,12 +97,12 @@ def run_databricks_skill() -> PlatformSegment:
     """Load Databricks skill state from disk, or fall back to fixture documents.
 
     Priority:
-      1. Saved session state (forge_output/databricks_skill_state.json) — from a
+      1. Saved session state (dafm_output/databricks_skill_state.json) — from a
          real skill conversation.
       2. Fixture documents (tests/fixtures/) — for demo/testing.
     """
     profile = load_profile(PROFILE_PATH)
-    state_path = PROJECT_ROOT / "forge_output" / "databricks_skill_state.json"
+    state_path = PROJECT_ROOT / "dafm_output" / "databricks_skill_state.json"
 
     if state_path.exists():
         print("\n🧱 Loading Databricks skill state from saved session...")
@@ -145,7 +145,7 @@ def run_databricks_skill() -> PlatformSegment:
 
     # Build the segment
     segment = build_databricks_segment(state, profile)
-    print(f"   Databricks Score: {segment.summary['forge_score']} ({segment.summary['readiness_band']})")
+    print(f"   Databricks Score: {segment.summary['dafm_score']} ({segment.summary['readiness_band']})")
     return segment
 
 
@@ -177,7 +177,7 @@ def generate_dashboard(
     merged_criteria, merged_pillars,
 ):
     """Generate the HTML estate dashboard."""
-    from forge.dashboard.generator import (
+    from dafm.dashboard.generator import (
         _generate_gauge_svg,
         _generate_radar_svg,
         _generate_radar_toggle_section,
@@ -208,7 +208,7 @@ def generate_dashboard(
     segments_data = [
         {
             "platform": "aws",
-            "forge_score": aws_segment.summary["forge_score"],
+            "dafm_score": aws_segment.summary["dafm_score"],
             "score_band": aws_segment.summary.get("readiness_band", "FOUNDATIONAL"),
             "criteria": [
                 {
@@ -228,7 +228,7 @@ def generate_dashboard(
         },
         {
             "platform": "databricks",
-            "forge_score": dbx_segment.summary["forge_score"],
+            "dafm_score": dbx_segment.summary["dafm_score"],
             "score_band": dbx_segment.summary.get("readiness_band", "FOUNDATIONAL"),
             "criteria": [
                 {
@@ -272,7 +272,7 @@ def generate_dashboard(
         "FOUNDATIONAL": "#fd7e14",
         "GOVERNED": "#ffc107",
         "AGENT-READY": "#28a745",
-        "FORGE-NATIVE": "#007bff",
+        "DAFM-NATIVE": "#007bff",
     }
     band_color = band_colors.get(estate_band.value, "#6c757d")
 
@@ -308,7 +308,7 @@ def generate_dashboard(
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FORGE Estate Assessment — Multi-Platform Dashboard</title>
+<title>DAFM Estate Assessment — Multi-Platform Dashboard</title>
 <style>
 * {{ margin: 0; padding: 0; box-sizing: border-box; }}
 body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -382,7 +382,7 @@ h3 {{ color: #e6edf3; font-size: 16px; margin-bottom: 12px; }}
 <body>
 <div class="container">
   <header>
-    <h1>🔥 FORGE Estate Assessment — Multi-Platform Dashboard</h1>
+    <h1>🔥 DAFM Estate Assessment — Multi-Platform Dashboard</h1>
     <p class="meta">
       Platforms: <strong>AWS + Databricks</strong> |
       Date: <strong>2026-07-20</strong> |
@@ -449,7 +449,7 @@ showPillar('P1');
 </html>'''
 
     # Write output
-    output_path = OUTPUT_DIR / "forge_estate_dashboard.html"
+    output_path = OUTPUT_DIR / "dafm_estate_dashboard.html"
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         f.write(html)
@@ -460,7 +460,7 @@ showPillar('P1');
 
 def main():
     print("=" * 60)
-    print("FORGE Estate Assessment — Multi-Platform (AWS + Databricks)")
+    print("DAFM Estate Assessment — Multi-Platform (AWS + Databricks)")
     print("=" * 60)
 
     # Step 1: Load past AWS results
@@ -485,8 +485,8 @@ def main():
     print(f"\n{'=' * 60}")
     print(f"ESTATE SUMMARY")
     print(f"{'=' * 60}")
-    print(f"  AWS Score:        {aws_segment.summary['forge_score']} ({aws_segment.summary['readiness_band']})")
-    print(f"  Databricks Score: {dbx_segment.summary['forge_score']} ({dbx_segment.summary['readiness_band']})")
+    print(f"  AWS Score:        {aws_segment.summary['dafm_score']} ({aws_segment.summary['readiness_band']})")
+    print(f"  Databricks Score: {dbx_segment.summary['dafm_score']} ({dbx_segment.summary['readiness_band']})")
     print(f"  Estate Score:     {estate_score} ({estate_band.value})")
     print(f"{'=' * 60}")
 

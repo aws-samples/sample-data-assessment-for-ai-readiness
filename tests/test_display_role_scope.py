@@ -1,11 +1,11 @@
-"""Tests for display_role_scope() function in forge.collector."""
+"""Tests for display_role_scope() function in dafm.collector."""
 
 import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from forge.collector import display_role_scope, _ROLE_SCOPE_ENTRIES, _SECURITY_NOTE
+from dafm.collector import display_role_scope, _ROLE_SCOPE_ENTRIES, _SECURITY_NOTE
 
 
 def test_display_role_scope_prints_all_9_entries(capsys):
@@ -52,7 +52,7 @@ def test_display_role_scope_contains_header(capsys):
     captured = capsys.readouterr()
     output = captured.out
 
-    assert "FORGE-Assessment-Role Permission Summary" in output
+    assert "DAFM-Assessment-Role Permission Summary" in output
 
 
 def test_display_role_scope_entry_content(capsys):

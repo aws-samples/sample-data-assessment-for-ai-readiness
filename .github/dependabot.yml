@@ -7,7 +7,7 @@ updates:
     open-pull-requests-limit: 10
     labels:
       - "dependencies"
-    # Surfaces CVEs in pinned deps (see docs/FORGE_Threat_Model.md, WI-3/T6).
+    # Surfaces CVEs in pinned deps (see docs/DAFM_Threat_Model.md, WI-3/T6).
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

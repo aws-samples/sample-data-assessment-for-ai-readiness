@@ -10,12 +10,12 @@ from __future__ import annotations
 
 import pytest
 
-from forge.skill_support.databricks_skill import (
+from dafm.skill_support.databricks_skill import (
     generate_fallback_prompt,
     generate_full_question_set,
     process_fallback_response,
 )
-from forge.skill_support.databricks_questions import DATABRICKS_QUESTION_BANK
+from dafm.skill_support.databricks_questions import DATABRICKS_QUESTION_BANK
 
 
 # ---------------------------------------------------------------------------

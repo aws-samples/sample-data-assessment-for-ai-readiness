@@ -1,12 +1,12 @@
-"""Unit tests for forge.scoring_engine.formula (v2.3)."""
+"""Unit tests for dafm.scoring_engine.formula (v2.3)."""
 
 import pytest
 
-from forge.scoring_engine.formula import (
+from dafm.scoring_engine.formula import (
     PENALTY_CAP,
     PILLAR_PENALTY_RATES,
     compute_coverage_multiplier,
-    compute_forge_score,
+    compute_dafm_score,
     compute_raw_score,
 )
 
@@ -166,30 +166,30 @@ class TestComputeCoverageMultiplier:
             compute_coverage_multiplier({"P1": 50.0}, bad_floors)
 
 
-# --- compute_forge_score tests ---
+# --- compute_dafm_score tests ---
 
-class TestComputeForgeScore:
+class TestComputeDafmScore:
     def test_simple_multiply_and_round(self):
         """DAFM Score = raw * multiplier, rounded to 1 decimal."""
-        assert compute_forge_score(67.8, 0.92) == 62.4
+        assert compute_dafm_score(67.8, 0.92) == 62.4
 
     def test_perfect_score(self):
         """100 raw × 1.0 multiplier = 100.0."""
-        assert compute_forge_score(100.0, 1.0) == 100.0
+        assert compute_dafm_score(100.0, 1.0) == 100.0
 
     def test_zero_score(self):
         """0 raw × any multiplier = 0.0."""
-        assert compute_forge_score(0.0, 0.85) == 0.0
+        assert compute_dafm_score(0.0, 0.85) == 0.0
 
     def test_minimum_multiplier(self):
         """Score with minimum multiplier (0.60)."""
-        result = compute_forge_score(80.0, 0.60)
+        result = compute_dafm_score(80.0, 0.60)
         assert result == 48.0
 
     def test_rounding_behavior(self):
         """Verify rounding to 1 decimal place."""
         # 55.55 * 0.88 = 48.884 → rounds to 48.9
-        result = compute_forge_score(55.55, 0.88)
+        result = compute_dafm_score(55.55, 0.88)
         assert result == 48.9
 
 

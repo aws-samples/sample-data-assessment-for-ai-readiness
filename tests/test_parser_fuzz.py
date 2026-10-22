@@ -10,12 +10,12 @@ import os
 
 import pytest
 
-from forge.document_ingest.cost_parser import (
+from dafm.document_ingest.cost_parser import (
     parse_cost_usage,
     DocumentTooLargeError,
     MAX_FILE_SIZE_BYTES,
 )
-from forge.document_ingest.config_parser import parse_config_export
+from dafm.document_ingest.config_parser import parse_config_export
 
 
 def _write(tmp_path, name, content, mode="w"):
@@ -31,7 +31,7 @@ class TestFileSizeCap:
     def test_oversized_csv_rejected(self, tmp_path, monkeypatch):
         # Shrink the cap so we don't have to write 100MB.
         monkeypatch.setattr(
-            "forge.document_ingest.cost_parser.MAX_FILE_SIZE_BYTES", 1024
+            "dafm.document_ingest.cost_parser.MAX_FILE_SIZE_BYTES", 1024
         )
         path = _write(tmp_path, "big.csv", "service,cost\n" + ("x" * 5000))
         with pytest.raises(DocumentTooLargeError):
@@ -39,7 +39,7 @@ class TestFileSizeCap:
 
     def test_oversized_config_rejected(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "forge.document_ingest.cost_parser.MAX_FILE_SIZE_BYTES", 1024
+            "dafm.document_ingest.cost_parser.MAX_FILE_SIZE_BYTES", 1024
         )
         path = _write(tmp_path, "big.txt", "y" * 5000)
         with pytest.raises(DocumentTooLargeError):

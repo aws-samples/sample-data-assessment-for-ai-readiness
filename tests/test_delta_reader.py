@@ -1,4 +1,4 @@
-"""Unit tests for forge/delta_engine/reader.py"""
+"""Unit tests for dafm/delta_engine/reader.py"""
 
 import json
 import logging
@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from forge.delta_engine.reader import read_history
+from dafm.delta_engine.reader import read_history
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def sample_record() -> dict:
     """A valid JSONL record matching the expected format."""
     return {
         "timestamp": "2026-07-07T10:15:00Z",
-        "forge_score": 62.4,
+        "dafm_score": 62.4,
         "score_band": "GOVERNED",
         "pillar_scores": {
             "P1": 70.0,
@@ -77,14 +77,14 @@ class TestReadHistoryValidRecords:
         assert result[0] == sample_record
 
     def test_multiple_records_preserved_in_order(self, tmp_path, sample_record):
-        record2 = {**sample_record, "forge_score": 70.1, "timestamp": "2026-08-01T10:00:00Z"}
+        record2 = {**sample_record, "dafm_score": 70.1, "timestamp": "2026-08-01T10:00:00Z"}
         path = tmp_path / "history.jsonl"
         lines = [json.dumps(sample_record), json.dumps(record2)]
         path.write_text("\n".join(lines) + "\n")
         result = read_history(path)
         assert len(result) == 2
-        assert result[0]["forge_score"] == 62.4
-        assert result[1]["forge_score"] == 70.1
+        assert result[0]["dafm_score"] == 62.4
+        assert result[1]["dafm_score"] == 70.1
 
     def test_returns_dicts(self, tmp_path, sample_record):
         path = tmp_path / "history.jsonl"
@@ -108,18 +108,18 @@ class TestReadHistoryMalformedLines:
         lines = [
             json.dumps(sample_record),
             "this is not valid json{{{",
-            json.dumps({**sample_record, "forge_score": 75.0}),
+            json.dumps({**sample_record, "dafm_score": 75.0}),
         ]
         path.write_text("\n".join(lines) + "\n")
         result = read_history(path)
         assert len(result) == 2
-        assert result[0]["forge_score"] == 62.4
-        assert result[1]["forge_score"] == 75.0
+        assert result[0]["dafm_score"] == 62.4
+        assert result[1]["dafm_score"] == 75.0
 
     def test_logs_warning_for_malformed_line(self, tmp_path, caplog):
         path = tmp_path / "history.jsonl"
         path.write_text("not json at all\n")
-        with caplog.at_level(logging.WARNING, logger="forge.delta_engine.reader"):
+        with caplog.at_level(logging.WARNING, logger="dafm.delta_engine.reader"):
             result = read_history(path)
         assert result == []
         assert "Skipping malformed line 1" in caplog.text

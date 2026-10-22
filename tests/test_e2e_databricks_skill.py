@@ -17,24 +17,24 @@ from pathlib import Path
 
 import pytest
 
-from forge.platform_segments.databricks_segment import (
+from dafm.platform_segments.databricks_segment import (
     SkillConversationState,
     build_databricks_segment,
 )
-from forge.skill_support.databricks_skill import (
+from dafm.skill_support.databricks_skill import (
     advance_skill_phase,
     get_initial_prompt,
     parse_uploaded_documents,
     summarize_findings,
 )
-from forge.profile_engine import ForgeProfile
-from forge.profile_engine.dimensions import (
+from dafm.profile_engine import DafmProfile
+from dafm.profile_engine.dimensions import (
     AgentMaturity,
     Architecture,
     Industry,
     Workload,
 )
-from forge.models import PlatformSegment, RelevanceStatus, CriterionType
+from dafm.models import PlatformSegment, RelevanceStatus, CriterionType
 
 
 # Path to the fixture CSV
@@ -44,9 +44,9 @@ FIXTURE_CSV = str(
 
 
 @pytest.fixture
-def test_profile() -> ForgeProfile:
+def test_profile() -> DafmProfile:
     """A realistic DAFM profile for testing."""
-    return ForgeProfile(
+    return DafmProfile(
         architecture=Architecture.HYBRID,
         workload=Workload.MULTI_TOOL_AGENTS,
         industry=Industry.FINANCIAL_SERVICES,
@@ -144,7 +144,7 @@ class TestFullSkillFlow:
         print(f"\n=== Platform Segment ===")
         print(f"Platform: {segment.platform}")
         print(f"Source type: {segment.source_type}")
-        print(f"FORGE Score: {segment.summary['forge_score']}")
+        print(f"DAFM Score: {segment.summary['dafm_score']}")
         print(f"Band: {segment.summary['readiness_band']}")
         print(f"Raw Score: {segment.summary['raw_score']}")
         print(f"Coverage Multiplier: {segment.summary['coverage_multiplier']}")
@@ -155,7 +155,7 @@ class TestFullSkillFlow:
         assert isinstance(segment, PlatformSegment)
         assert segment.platform == "databricks"
         assert segment.source_type == "conversational"
-        assert 0.0 <= segment.summary["forge_score"] <= 100.0
+        assert 0.0 <= segment.summary["dafm_score"] <= 100.0
         assert len(segment.criteria) > 0
         assert len(segment.pillars) > 0
 

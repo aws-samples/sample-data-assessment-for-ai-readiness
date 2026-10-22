@@ -19,8 +19,8 @@ Thumbs.db
 # Kiro specs (exclude specs, keep skills)
 .kiro/specs/
 
-# FORGE output artifacts (generated, not source)
-forge_output/
+# DAFM output artifacts (generated, not source)
+dafm_output/
 
 # IDE
 .idea/

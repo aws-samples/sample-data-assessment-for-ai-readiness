@@ -2,7 +2,7 @@
 
 import pytest
 
-from forge.dashboard.generator import _generate_radar_toggle_section
+from dafm.dashboard.generator import _generate_radar_toggle_section
 
 
 PILLAR_NAMES = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9"]

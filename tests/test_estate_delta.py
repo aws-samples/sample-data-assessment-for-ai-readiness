@@ -1,10 +1,10 @@
-"""Unit tests for compute_estate_delta in forge/delta_engine/comparator.py.
+"""Unit tests for compute_estate_delta in dafm/delta_engine/comparator.py.
 
 Tests cover:
   - Estate-level delta (current vs previous estate score)
   - Per-platform deltas when both assessments have a platform
   - New platform appearing reported as "newly_assessed"
-  - Backward compat: falls back to forge_score when estate_score missing
+  - Backward compat: falls back to dafm_score when estate_score missing
   - Band transitions using estate_band / score_band
 """
 
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from forge.delta_engine import (
+from dafm.delta_engine import (
     EstateDeltaResult,
     PlatformDelta,
     compute_estate_delta,
@@ -22,7 +22,7 @@ from forge.delta_engine import (
 
 def _write_history(tmp_path: Path, records: list[dict]) -> Path:
     """Write records to a temporary JSONL file."""
-    path = tmp_path / "forge_history.jsonl"
+    path = tmp_path / "dafm_history.jsonl"
     lines = [json.dumps(r) for r in records]
     path.write_text("\n".join(lines) + "\n")
     return path
@@ -33,7 +33,7 @@ def single_platform_previous() -> dict:
     """A legacy single-platform (AWS-only) record."""
     return {
         "timestamp": "2026-07-01T10:00:00Z",
-        "forge_score": 62.4,
+        "dafm_score": 62.4,
         "score_band": "GOVERNED",
         "pillar_scores": {
             "P1": 70.0, "P2": 55.0, "P3": 60.0, "P4": 65.0,
@@ -107,10 +107,10 @@ class TestEstateScoreDelta:
         # 59.8 - 68.5 = -8.7
         assert result.estate_score_delta == -8.7
 
-    def test_falls_back_to_forge_score_when_estate_score_missing(self, tmp_path, single_platform_previous):
+    def test_falls_back_to_dafm_score_when_estate_score_missing(self, tmp_path, single_platform_previous):
         current = {
             "timestamp": "2026-07-15T10:00:00Z",
-            "forge_score": 70.0,
+            "dafm_score": 70.0,
             "score_band": "GOVERNED",
             "pillar_scores": {
                 "P1": 75.0, "P2": 60.0, "P3": 65.0, "P4": 70.0,
@@ -123,8 +123,8 @@ class TestEstateScoreDelta:
         # 70.0 - 62.4 = 7.6
         assert result.estate_score_delta == 7.6
 
-    def test_mixed_estate_and_forge_score(self, tmp_path, single_platform_previous, multi_platform_current):
-        """Previous has only forge_score, current has estate_score."""
+    def test_mixed_estate_and_dafm_score(self, tmp_path, single_platform_previous, multi_platform_current):
+        """Previous has only dafm_score, current has estate_score."""
         path = _write_history(tmp_path, [single_platform_previous, multi_platform_current])
         result = compute_estate_delta(path)
         # 59.8 - 62.4 = -2.6
@@ -161,7 +161,7 @@ class TestPlatformDeltas:
         assert "databricks" in result.new_platforms
 
     def test_no_platform_scores_field_yields_empty_deltas(self, tmp_path, single_platform_previous):
-        current = {**single_platform_previous, "forge_score": 70.0, "timestamp": "2026-08-01T10:00:00Z"}
+        current = {**single_platform_previous, "dafm_score": 70.0, "timestamp": "2026-08-01T10:00:00Z"}
         path = _write_history(tmp_path, [single_platform_previous, current])
         result = compute_estate_delta(path)
         assert result.platform_deltas == []
@@ -268,7 +268,7 @@ class TestBandTransitions:
     def test_falls_back_to_score_band_for_band_transition(self, tmp_path, single_platform_previous):
         current = {
             "timestamp": "2026-07-15T10:00:00Z",
-            "forge_score": 80.0,
+            "dafm_score": 80.0,
             "score_band": "AGENT-READY",
             "pillar_scores": {
                 "P1": 80.0, "P2": 80.0, "P3": 80.0, "P4": 80.0,

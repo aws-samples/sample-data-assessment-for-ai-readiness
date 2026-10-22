@@ -2,7 +2,7 @@
 
 import pytest
 
-from forge.dashboard.generator import (
+from dafm.dashboard.generator import (
     _generate_estate_criteria_html,
     _build_analog_evidence,
     _build_binary_failure_evidence,
@@ -15,7 +15,7 @@ def _make_segment(platform, criteria):
     """Helper to build a minimal platform segment dict."""
     return {
         "platform": platform,
-        "forge_score": 60.0,
+        "dafm_score": 60.0,
         "score_band": "GOVERNED",
         "pillars": [],
         "criteria": criteria,

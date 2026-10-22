@@ -1,16 +1,16 @@
 """
-Unit tests for forge.relevance_engine.validator module.
+Unit tests for dafm.relevance_engine.validator module.
 
 Tests confidence scoring, service classification, and validate_service structure.
 """
 import pytest
 from unittest.mock import patch, MagicMock
-from forge.relevance_engine.validator import (
+from dafm.relevance_engine.validator import (
     compute_confidence,
     classify_service,
     validate_service,
 )
-from forge.models import ValidationResult
+from dafm.models import ValidationResult
 
 
 class TestComputeConfidence:
@@ -98,7 +98,7 @@ class TestClassifyService:
 class TestValidateService:
     """Tests for validate_service() function structure and fallback behavior."""
 
-    @patch("forge.relevance_engine.validator.create_client")
+    @patch("dafm.relevance_engine.validator.create_client")
     def test_returns_validation_result(self, mock_create):
         """validate_service returns a ValidationResult dataclass."""
         # Mock both clients to return access denied
@@ -113,7 +113,7 @@ class TestValidateService:
         assert 0.0 <= result.confidence_score <= 1.0
         assert result.classification in ("dormant", "active", "moderate")
 
-    @patch("forge.relevance_engine.validator.create_client")
+    @patch("dafm.relevance_engine.validator.create_client")
     def test_both_denied_returns_0_5(self, mock_create):
         """When both CE and CT are access denied, confidence = 0.5."""
         from botocore.exceptions import ClientError
@@ -129,7 +129,7 @@ class TestValidateService:
         assert result.cost_access_denied is True
         assert result.trail_access_denied is True
 
-    @patch("forge.relevance_engine.validator.create_client")
+    @patch("dafm.relevance_engine.validator.create_client")
     def test_cost_denied_relies_on_trail(self, mock_create):
         """When Cost Explorer is denied, rely on CloudTrail only."""
         from botocore.exceptions import ClientError
@@ -158,7 +158,7 @@ class TestValidateService:
         assert result.confidence_score > 0.7
         assert result.classification == "active"
 
-    @patch("forge.relevance_engine.validator.create_client")
+    @patch("dafm.relevance_engine.validator.create_client")
     def test_active_service_with_cost(self, mock_create):
         """Service with positive cost classified as active."""
         mock_ce = MagicMock()
@@ -186,7 +186,7 @@ class TestValidateService:
         assert result.confidence_score > 0.7
         assert result.classification == "active"
 
-    @patch("forge.relevance_engine.validator.create_client")
+    @patch("dafm.relevance_engine.validator.create_client")
     def test_dormant_service(self, mock_create):
         """Service with zero cost and few events classified as dormant."""
         mock_ce = MagicMock()
@@ -216,7 +216,7 @@ class TestValidateService:
 
     def test_no_cli_coupling(self):
         """Module has no argparse or sys.exit dependencies."""
-        import forge.relevance_engine.validator as mod
+        import dafm.relevance_engine.validator as mod
         import inspect
 
         source = inspect.getsource(mod)

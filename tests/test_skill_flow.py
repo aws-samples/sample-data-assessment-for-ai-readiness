@@ -13,8 +13,8 @@ import tempfile
 
 import pytest
 
-from forge.platform_segments.databricks_segment import SkillConversationState
-from forge.skill_support.databricks_skill import (
+from dafm.platform_segments.databricks_segment import SkillConversationState
+from dafm.skill_support.databricks_skill import (
     advance_skill_phase,
     get_initial_prompt,
 )
@@ -165,7 +165,7 @@ class TestPhaseDocumentReview:
 
     def test_all_criteria_scored_skips_to_complete(self):
         # If all criteria already scored from documents, skip follow-up
-        from forge.platform_segments.databricks_registry import (
+        from dafm.platform_segments.databricks_registry import (
             DATABRICKS_CRITERIA_REGISTRY,
         )
 
