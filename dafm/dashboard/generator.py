@@ -11,10 +11,13 @@ Output: dafm_dashboard.html
 """
 
 import json
+import logging
 import math
 import sys
 import os
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 try:
     from dafm.trend_visualizer import load_history, generate_trend_section
@@ -251,49 +254,54 @@ def _generate_gauge_svg(score: float) -> str:
     return "\n".join(svg_parts)
 
 
-def _aggregate_pillar_tco(pillar: dict) -> int:
-    """Derive a pillar-level 1–5 TCO indicator.
+def _aggregate_pillar_tco(pillar: dict) -> tuple:
+    """Derive pillar-level TCO statistics from criterion-level tags.
 
-    Prefers aggregating criterion-level cost/overhead/severity tags when they
-    are present in the assessment JSON (majority vote per input). Falls back to
-    the taxonomy's per-pillar primary-vector heuristic, and finally to a
-    neutral mid-scale value so every pillar can be plotted.
+    Computes the 1-5 TCO indicator for each criterion that has both ``cost``
+    and ``operational_overhead`` set, then returns the mean and the maximum of
+    those values. The mean is returned unrounded so the quadrant plots it
+    exactly. If no criterion in the pillar is tagged, a neutral 3 is returned
+    for both so the pillar still appears on the quadrant.
 
     Args:
         pillar: A pillar dict from the assessment JSON.
 
     Returns:
-        An integer 1–5 TCO indicator (never 0 — pillars are always plottable).
+        A ``(mean_tco, max_tco)`` tuple, e.g. ``(2.333..., 5)``.
     """
-    from collections import Counter
-
     from dafm.tco import compute_tco
 
-    def _majority(values: list[str]) -> str:
-        present = [v for v in values if v in ("low", "medium", "high")]
-        if not present:
-            return ""
-        return Counter(present).most_common(1)[0][0]
+    values = []
+    for c in pillar.get("criteria", []) or []:
+        if not c.get("cost") or not c.get("operational_overhead"):
+            continue
+        tco = compute_tco(
+            c.get("cost", ""),
+            c.get("operational_overhead", ""),
+            c.get("severity", ""),
+        )
+        if tco > 0:
+            values.append(tco)
 
+    if not values:
+        return (3.0, 3)
+    return (sum(values) / len(values), max(values))
+
+
+def _pillar_compliance_share(pillar: dict) -> float:
+    """Percent (0-100) of a pillar's criteria that carry >=1 compliance framework."""
     criteria = pillar.get("criteria", []) or []
-    costs = [c.get("cost", "") for c in criteria]
-    overheads = [c.get("operational_overhead", "") for c in criteria]
-    severities = [c.get("severity", "") for c in criteria]
-
-    agg = compute_tco(_majority(costs), _majority(overheads), _majority(severities))
-    if agg > 0:
-        return agg
-
-    # No criterion-level tags: use a neutral mid-scale indicator so the pillar
-    # still appears on the quadrant without implying a specific cost profile.
-    return 3
+    if not criteria:
+        return 0.0
+    with_compliance = sum(1 for c in criteria if c.get("compliance"))
+    return 100.0 * with_compliance / len(criteria)
 
 
 def _pillar_compliance(pillar_code: str) -> list[str]:
     """Best-effort compliance frameworks a pillar bears on.
 
     Governance/access/audit/quality pillars are treated as compliance-bearing;
-    this is a display heuristic for bubble color only and does not affect
+    this is a display heuristic for the framework filter only and does not affect
     scoring. Returns an empty list for pillars with no compliance bearing.
     """
     governance_pillars = {"P3", "P4", "P5", "P6", "P8", "P9"}
@@ -310,10 +318,11 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
     Plots each pillar as a bubble where:
 
     * X = pillar readiness score (0–100)
-    * Y = pillar TCO indicator (1–5, aggregated from criterion-level tags when
-      available, else a taxonomy/neutral fallback)
+    * Y = pillar TCO indicator (1-5, the mean of per-criterion TCO values;
+      the max is shown in the tooltip; neutral 3 when no criterion is tagged)
     * bubble size = criteria count
-    * bubble color = whether the pillar bears on >=1 compliance framework
+    * bubble color = share of the pillar's criteria that carry >=1 compliance
+      framework (light tint at 0% to teal at 100%)
 
     Client-side filter controls (by readiness vector, tension, and compliance
     framework) recompute which bubbles are visible without a page reload. The
@@ -347,7 +356,8 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
         code = p["code"]
         pct = scoring["pillar_scores"][code]["score_percent"]
         total = scoring["pillar_scores"][code]["total"]
-        tco = _aggregate_pillar_tco(p)
+        tco_mean, tco_max = _aggregate_pillar_tco(p)
+        compliance_share = _pillar_compliance_share(p)
         tags = get_pillar_tags(code) or {}
         pillar_vectors = []
         if tags.get("primary_vector"):
@@ -367,7 +377,9 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
             "code": code,
             "name": p["name"],
             "x": round(pct, 1),
-            "y": tco,
+            "y": tco_mean,
+            "y_max": tco_max,
+            "compliance_share": round(compliance_share, 1),
             "count": total,
             "compliance": compliance,
             "vectors": all_vectors,
@@ -392,8 +404,8 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
     return f'''  <div class="card quadrant-card" style="margin-top:20px">
     <h2>AI-Readiness Quadrant</h2>
     <p style="color:#8b949e;font-size:13px;margin-bottom:12px">
-      Each bubble is a pillar — X: readiness score (0–100), Y: TCO indicator (1–5, higher = costlier),
-      size: criteria count, color: compliance-bearing (teal) vs. not (grey). Use the filters to focus the view.
+      Each bubble is a pillar. X: readiness score (0-100). Y: mean TCO indicator across the pillar's criteria
+      (1-5, higher = costlier; the tooltip also shows the max). Size: criteria count. Use the filters to focus the view.
     </p>
     <div class="quadrant-filters">
       <label>Readiness vector
@@ -413,6 +425,10 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
     <p id="quadrant-empty" style="display:none;color:#8b949e;text-align:center;padding:12px">
       No pillars match the selected filters.
     </p>
+    <p style="color:#8b949e;font-size:12px;margin-top:8px">
+      Bubble colour: share of criteria that evidence a compliance framework
+      (<span style="color:#cfeeea">light</span> = 0%, <span style="color:#2aa198">teal</span> = 100%).
+    </p>
   </div>
 
   <script>
@@ -427,6 +443,13 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
 
     function xPos(x) {{ return mL + (x / 100) * pw; }}
     function yPos(y) {{ return mT + (1 - (y - 1) / 4) * ph; }}  // TCO 1..5, 5 at top
+    // Sequential colour scale: light tint (0%) to teal (100%).
+    var TINT = [207, 238, 234], TEAL = [42, 161, 152];
+    function shareColor(pct) {{
+      var t = Math.max(0, Math.min(100, pct)) / 100;
+      var rgb = TINT.map(function(a, i) {{ return Math.round(a + (TEAL[i] - a) * t); }});
+      return 'rgb(' + rgb.join(',') + ')';
+    }}
     function el(tag, attrs, text) {{
       var e = document.createElementNS(NS, tag);
       for (var k in attrs) e.setAttribute(k, attrs[k]);
@@ -467,9 +490,9 @@ def _generate_quadrant_section(pillars: list, scoring: dict) -> str:
         shown++;
         var cx = xPos(p.x), cy = yPos(p.y);
         var r = 10 + Math.sqrt(p.count) * 2.2;
-        var fill = (p.compliance && p.compliance.length > 0) ? '#2aa198' : '#6c757d';
+        var fill = shareColor(p.compliance_share || 0);
         var c = el('circle', {{cx: cx, cy: cy, r: r, fill: fill, 'fill-opacity': 0.55, stroke: fill, 'stroke-width': 2}});
-        var title = el('title', {{}}, p.code + ': ' + p.name + '  (score ' + p.x + ', TCO ' + p.y + ', ' + p.count + ' criteria)');
+        var title = el('title', {{}}, p.code + ': ' + p.name + '  (score ' + p.x + ', TCO ' + p.y.toFixed(1) + ' avg, ' + p.y_max + ' max, ' + p.count + ' criteria, ' + Math.round(p.compliance_share) + '% evidence a compliance framework)');
         c.appendChild(title);
         svg.appendChild(c);
         svg.appendChild(el('text', {{x: cx, y: cy + 4, 'text-anchor': 'middle', fill: '#f0f6fc', 'font-size': 11, 'font-weight': 600}}, p.code));
@@ -759,7 +782,16 @@ table.recs td { padding: 8px 10px; border-bottom: 1px solid #21262d; }
     try:
         html += _generate_quadrant_section(pillars, scoring)
     except Exception:
-        pass  # Quadrant section is additive; never block the core dashboard.
+        # The quadrant is additive and must not block the core dashboard, but a
+        # failure should be visible: log it and show a placeholder card.
+        logger.exception("AI-Readiness Quadrant could not be rendered")
+        html += (
+            '  <div class="card quadrant-card" style="margin-top:20px">\n'
+            '    <h2>AI-Readiness Quadrant</h2>\n'
+            '    <p style="color:#8b949e">AI-Readiness Quadrant unavailable: '
+            'tag data could not be rendered.</p>\n'
+            '  </div>\n\n'
+        )
 
     html += '''  <div class="card">
     <h2>Criteria Detail</h2>
