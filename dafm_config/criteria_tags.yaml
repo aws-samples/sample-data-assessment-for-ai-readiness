@@ -1,0 +1,1150 @@
+# DAFM probe-level tags for the 142+ criteria in dafm/criteria_registry.py.
+# Keyed P<pillar>.<index>. Allowed values come from dafm_config/tag_taxonomy.yaml.
+# cost, operational_overhead and severity were set by reviewed judgment (2026-11-20), seeded
+# by a keyword-rule draft; TCO is derived at runtime by dafm/tco.py and is not stored here.
+
+# P1
+P1.1:
+  name: "API queryable"
+  vectors: [interoperable]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: []
+P1.2:
+  name: "Catalog REST API"
+  vectors: [interoperable, open_framework]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: []
+P1.3:
+  name: "Schema introspection"
+  vectors: [interoperable, ai_only]
+  tension: coverage_vs_precision
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.4:
+  name: "MCP/tool interface"
+  vectors: [interoperable, ai_only, open_framework]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: []
+P1.5:
+  name: "Machine identity auth"
+  vectors: [fine_grained_access_control, governance, ai_only]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, HIPAA, FINRA]
+P1.6:
+  name: "Catalog covers >80%"
+  vectors: [interoperable, relevance]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: []
+P1.7:
+  name: "Catalog descriptions >80%"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P1.8:
+  name: "Domain namespaces"
+  vectors: [interoperable, governance]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P1.9:
+  name: "Cross-engine discovery"
+  vectors: [interoperable, open_framework]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.10:
+  name: "Auto-refreshed metadata"
+  vectors: [interoperable, current]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.11:
+  name: "Open table format"
+  vectors: [open_framework, interoperable]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.12:
+  name: "Storage separated"
+  vectors: [open_framework, interoperable]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: low
+  severity: low
+  compliance: []
+P1.13:
+  name: "Zero-copy read path"
+  vectors: [interoperable, current]
+  tension: freshness_vs_cost
+  cost: medium
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.14:
+  name: "Multi-engine access"
+  vectors: [interoperable, open_framework]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P1.15:
+  name: "Version history"
+  vectors: [reliable, open_framework]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: [SOC2]
+P1.16:
+  name: "Relational DB accessible"
+  vectors: [interoperable]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.17:
+  name: "NoSQL accessible"
+  vectors: [interoperable]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P1.18:
+  name: "Unstructured metadata"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: high
+  severity: high
+  compliance: []
+P1.19:
+  name: "Federated query"
+  vectors: [interoperable, open_framework]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P1.20:
+  name: "Operational DB cross-boundary"
+  vectors: [interoperable, current]
+  tension: freshness_vs_cost
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P1.21:
+  name: "Governance on federated"
+  vectors: [governance, fine_grained_access_control, interoperable]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, GDPR, HIPAA]
+# P2
+P2.1:
+  name: "Business glossary exists"
+  vectors: [relevance]
+  tension: coverage_vs_precision
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.2:
+  name: "Terms linked to tables"
+  vectors: [relevance]
+  tension: coverage_vs_precision
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.3:
+  name: "Glossary covers >50%"
+  vectors: [relevance]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P2.4:
+  name: "Glossary maintained <90d"
+  vectors: [relevance, current]
+  tension: coverage_vs_precision
+  cost: low
+  operational_overhead: high
+  severity: low
+  compliance: []
+P2.5:
+  name: "Entity relationships defined"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.6:
+  name: "Hierarchies modeled"
+  vectors: [relevance]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: low
+  compliance: []
+P2.7:
+  name: "Synonym mapping"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.8:
+  name: "Relationships queryable"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.9:
+  name: "Column descriptions >50%"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P2.10:
+  name: "Data domains defined"
+  vectors: [relevance, governance]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P2.11:
+  name: "Ownership assigned"
+  vectors: [governance, relevance]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2]
+P2.12:
+  name: "Business context via API"
+  vectors: [relevance, ai_only, interoperable]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P2.13:
+  name: "Vector embeddings exist"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: []
+P2.14:
+  name: "Hybrid search available"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.15:
+  name: "GraphRAG available"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: high
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P2.16:
+  name: "Text-to-SQL path"
+  vectors: [relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P2.17:
+  name: "Retrieval accuracy evaluated"
+  vectors: [relevance, reliable, ai_only]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT]
+# P3
+P3.1:
+  name: "Source-to-consumption lineage"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: high
+  severity: high
+  compliance: [SOC2, ISO_27001, EU_AI_ACT]
+P3.2:
+  name: "Lineage captures transforms"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, EU_AI_ACT]
+P3.3:
+  name: "Auto-updated lineage"
+  vectors: [reliable, current]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P3.4:
+  name: "Multi-engine lineage"
+  vectors: [reliable, open_framework, interoperable]
+  tension: portable_vs_maturity
+  cost: high
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P3.5:
+  name: "Queryable via API"
+  vectors: [reliable, interoperable, ai_only]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P3.6:
+  name: "OpenLineage standard"
+  vectors: [reliable, open_framework]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: low
+  severity: low
+  compliance: []
+P3.7:
+  name: "Column-level lineage"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: medium
+  severity: high
+  compliance: [GDPR, HIPAA, SOC2]
+P3.8:
+  name: "Timestamps on events"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P3.9:
+  name: "Freshness tracked"
+  vectors: [reliable, current]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P3.10:
+  name: "Source system identified"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P3.11:
+  name: "Transformation logic linked"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: [SOC2]
+P3.12:
+  name: "Lineage immutable"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2, ISO_27001, EU_AI_ACT]
+P3.13:
+  name: "Vector index audit trail"
+  vectors: [reliable, governance, ai_only]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+P3.14:
+  name: "Right-to-be-forgotten"
+  vectors: [governance, reliable, ai_only]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: high
+  severity: high
+  compliance: [GDPR, CCPA]
+# P4
+P4.1:
+  name: "Quality rules defined"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: medium
+  severity: high
+  compliance: []
+P4.2:
+  name: "Completeness checks"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P4.3:
+  name: "Uniqueness checks"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P4.4:
+  name: "Freshness checks"
+  vectors: [reliable, current]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P4.5:
+  name: "Referential integrity"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: medium
+  severity: low
+  compliance: []
+P4.6:
+  name: "Business logic rules"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P4.7:
+  name: "Checks run automatically"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: []
+P4.8:
+  name: "Quality scores stored"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P4.9:
+  name: "Scores in catalog"
+  vectors: [reliable, relevance, ai_only]
+  tension: coverage_vs_precision
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P4.10:
+  name: "Alerts on drift"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P4.11:
+  name: "Certified flag"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P4.12:
+  name: "Score-based certification"
+  vectors: [reliable, governance]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P4.13:
+  name: "Certification via API"
+  vectors: [reliable, ai_only, interoperable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P4.14:
+  name: "PII/PHI detection"
+  vectors: [reliable, governance, fine_grained_access_control]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [GDPR, HIPAA, CCPA, PCI_DSS]
+P4.15:
+  name: "Sensitivity labels"
+  vectors: [reliable, governance, fine_grained_access_control]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [GDPR, HIPAA, CCPA]
+P4.16:
+  name: "Schema contracts"
+  vectors: [reliable]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P4.17:
+  name: "Breaking change alerts"
+  vectors: [reliable, current]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P4.18:
+  name: "Model trust scores"
+  vectors: [reliable, ai_only]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: high
+  severity: medium
+  compliance: [EU_AI_ACT]
+# P5
+P5.1:
+  name: "Column-level access"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [HIPAA, PCI_DSS, GDPR, FINRA, SOC2]
+P5.2:
+  name: "Row-level filtering"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [HIPAA, PCI_DSS, GDPR, FINRA, SOC2]
+P5.3:
+  name: "Dynamic masking"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [GDPR, HIPAA, PCI_DSS, CCPA]
+P5.4:
+  name: "Tag-based policies"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2, HIPAA, GDPR]
+P5.5:
+  name: "Agent IAM identities"
+  vectors: [fine_grained_access_control, ai_only]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2]
+P5.6:
+  name: "Least-privilege"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: high
+  severity: high
+  compliance: [SOC2, ISO_27001, FedRAMP]
+P5.7:
+  name: "Identity chain traceable"
+  vectors: [fine_grained_access_control, governance, reliable]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, HIPAA, FINRA, GDPR]
+P5.8:
+  name: "Agent access revocable"
+  vectors: [fine_grained_access_control, controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2, EU_AI_ACT]
+P5.9:
+  name: "Policies as code"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: [SOC2]
+P5.10:
+  name: "Version-controlled"
+  vectors: [fine_grained_access_control, governance, reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: [SOC2, ISO_27001]
+P5.11:
+  name: "Policy evaluation auditable"
+  vectors: [fine_grained_access_control, governance, reliable]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, ISO_27001, FINRA]
+P5.12:
+  name: "Cross-account governed"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2]
+P5.13:
+  name: "Cedar/OPA policies"
+  vectors: [fine_grained_access_control, open_framework]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P5.14:
+  name: "Request-time evaluation"
+  vectors: [fine_grained_access_control, current]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2]
+P5.15:
+  name: "Agent identity at protocol"
+  vectors: [fine_grained_access_control, ai_only, interoperable]
+  tension: centralization_vs_federation
+  cost: high
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, HIPAA, FINRA]
+P5.16:
+  name: "Multi-tenant isolation"
+  vectors: [fine_grained_access_control, governance]
+  tension: centralization_vs_federation
+  cost: high
+  operational_overhead: high
+  severity: high
+  compliance: [SOC2, HIPAA, GDPR, PCI_DSS]
+P5.17:
+  name: "Per-tenant cost attribution"
+  vectors: [governance]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: low
+  compliance: []
+# P6
+P6.1:
+  name: "Agent-to-data logged"
+  vectors: [governance, reliable, ai_only]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2, ISO_27001, EU_AI_ACT, HIPAA]
+P6.2:
+  name: "Intent context in logs"
+  vectors: [governance, ai_only, controllable]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+P6.3:
+  name: "Distributed tracing"
+  vectors: [governance, reliable]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P6.4:
+  name: "Open standard traces"
+  vectors: [governance, open_framework]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P6.5:
+  name: "Per-agent cost measurable"
+  vectors: [governance, ai_only]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P6.6:
+  name: "Per-query cost attributable"
+  vectors: [governance]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: low
+  compliance: []
+P6.7:
+  name: "Cost anomaly detection"
+  vectors: [governance]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P6.8:
+  name: "Audit queryable SQL"
+  vectors: [governance, reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: [SOC2, ISO_27001]
+P6.9:
+  name: "Machine access logged"
+  vectors: [governance, fine_grained_access_control, reliable]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2, HIPAA, FINRA, PCI_DSS]
+P6.10:
+  name: "Data-layer access logged"
+  vectors: [governance, fine_grained_access_control, reliable]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2, HIPAA, FINRA, PCI_DSS, GDPR]
+P6.11:
+  name: "Config/Audit Manager"
+  vectors: [governance, reliable]
+  tension: centralization_vs_federation
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: [SOC2, ISO_27001, FedRAMP]
+P6.12:
+  name: "Regulatory evidence"
+  vectors: [governance, reliable]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: high
+  severity: high
+  compliance: [SOC2, ISO_27001, FedRAMP, FINRA, DORA]
+# P7
+P7.1:
+  name: "Real-time dataset"
+  vectors: [current]
+  tension: freshness_vs_cost
+  cost: high
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P7.2:
+  name: "Freshness SLAs"
+  vectors: [current, reliable]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P7.3:
+  name: "Freshness queryable"
+  vectors: [current, ai_only]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P7.4:
+  name: "Agents verify freshness"
+  vectors: [current, ai_only, controllable]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: []
+P7.5:
+  name: "Streaming layer exists"
+  vectors: [current]
+  tension: freshness_vs_cost
+  cost: high
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P7.6:
+  name: "Streaming to cataloged storage"
+  vectors: [current, interoperable, open_framework]
+  tension: freshness_vs_cost
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P7.7:
+  name: "Streaming lineage"
+  vectors: [current, reliable, governance]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: high
+  severity: medium
+  compliance: [SOC2]
+P7.8:
+  name: "Streaming DQ enforcement"
+  vectors: [current, reliable]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: high
+  severity: medium
+  compliance: []
+P7.9:
+  name: "Schema change alerts"
+  vectors: [current, reliable]
+  tension: trust_vs_velocity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P7.10:
+  name: "Data drift monitored"
+  vectors: [current, reliable, ai_only]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P7.11:
+  name: "Time-travel supported"
+  vectors: [current, open_framework, reliable]
+  tension: portable_vs_maturity
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P7.12:
+  name: "Change notifications"
+  vectors: [current, interoperable]
+  tension: freshness_vs_cost
+  cost: low
+  operational_overhead: low
+  severity: low
+  compliance: []
+P7.13:
+  name: "Zero-ETL exists"
+  vectors: [current, interoperable]
+  tension: freshness_vs_cost
+  cost: medium
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P7.14:
+  name: "Zero-ETL governed"
+  vectors: [current, governance, fine_grained_access_control]
+  tension: centralization_vs_federation
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [SOC2]
+P7.15:
+  name: "Embedding refresh schedule"
+  vectors: [current, relevance, ai_only]
+  tension: freshness_vs_cost
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+# P8
+P8.1:
+  name: "Content filtering"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: [EU_AI_ACT]
+P8.2:
+  name: "Topic restrictions"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: [EU_AI_ACT]
+P8.3:
+  name: "Rate limiting"
+  vectors: [controllable]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P8.4:
+  name: "Kill switch"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: [EU_AI_ACT, DORA]
+P8.5:
+  name: "Policies as code"
+  vectors: [controllable, governance]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: [SOC2]
+P8.6:
+  name: "Dry-run available"
+  vectors: [controllable]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: low
+  severity: low
+  compliance: []
+P8.7:
+  name: "Violations alerted"
+  vectors: [controllable, governance]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: [SOC2]
+P8.8:
+  name: "Policies portable"
+  vectors: [controllable, open_framework, interoperable]
+  tension: portable_vs_maturity
+  cost: medium
+  operational_overhead: medium
+  severity: low
+  compliance: []
+P8.9:
+  name: "Human approval required"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: high
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+P8.10:
+  name: "Escalation path"
+  vectors: [controllable]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: medium
+  severity: medium
+  compliance: []
+P8.11:
+  name: "Timeout/circuit-breaker"
+  vectors: [controllable, reliable]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: medium
+  compliance: []
+P8.12:
+  name: "Actions auditable"
+  vectors: [controllable, governance, reliable]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: low
+  severity: high
+  compliance: [SOC2, EU_AI_ACT, ISO_27001]
+P8.13:
+  name: "Policy at data layer"
+  vectors: [controllable, fine_grained_access_control, governance]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+P8.14:
+  name: "Policy at tool layer"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+P8.15:
+  name: "Policy at output layer"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT]
+P8.16:
+  name: "Policy at action layer"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: high
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+# P9
+P9.1:
+  name: "Reasoning steps recorded"
+  vectors: [controllable, reliable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT]
+P9.2:
+  name: "Decision links to sources"
+  vectors: [controllable, reliable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, GDPR]
+P9.3:
+  name: "Intermediate reasoning"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: [EU_AI_ACT]
+P9.4:
+  name: "Decision chain queryable"
+  vectors: [controllable, reliable]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, SOC2]
+P9.5:
+  name: "Full path reconstructable"
+  vectors: [controllable, reliable]
+  tension: autonomy_vs_safety
+  cost: high
+  operational_overhead: high
+  severity: high
+  compliance: [EU_AI_ACT, FINRA]
+P9.6:
+  name: "Data-to-decision attribution"
+  vectors: [controllable, reliable, ai_only]
+  tension: autonomy_vs_safety
+  cost: high
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, GDPR]
+P9.7:
+  name: "Confidence quantified"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: medium
+  compliance: [EU_AI_ACT]
+P9.8:
+  name: "Alternatives logged"
+  vectors: [controllable, reliable, ai_only]
+  tension: autonomy_vs_safety
+  cost: medium
+  operational_overhead: medium
+  severity: low
+  compliance: [EU_AI_ACT]
+P9.9:
+  name: "Outcomes tracked"
+  vectors: [controllable, reliable]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: high
+  severity: medium
+  compliance: [EU_AI_ACT]
+P9.10:
+  name: "Human review possible"
+  vectors: [controllable, ai_only]
+  tension: autonomy_vs_safety
+  cost: low
+  operational_overhead: medium
+  severity: high
+  compliance: [EU_AI_ACT, GDPR]
+P9.11:
+  name: "Decision lineage immutable"
+  vectors: [controllable, reliable, governance]
+  tension: trust_vs_velocity
+  cost: medium
+  operational_overhead: low
+  severity: high
+  compliance: [EU_AI_ACT, FINRA, SOC2]
+P9.12:
+  name: "Regulatory evidence <10min"
+  vectors: [controllable, governance, reliable]
+  tension: trust_vs_velocity
+  cost: high
+  operational_overhead: high
+  severity: high
+  compliance: [EU_AI_ACT, FINRA, DORA, SOC2]

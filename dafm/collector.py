@@ -605,6 +605,12 @@ def _run_config_mode(
             criterion_type=criterion.criterion_type,
             exclusion_reason=exclusion_reason,
             confidence_reduced=(relevance_status == RelevanceStatus.UNDETERMINED),
+            cost=criterion.cost,
+            operational_overhead=criterion.operational_overhead,
+            severity=criterion.severity,
+            tension=criterion.tension,
+            vectors=list(criterion.vectors),
+            compliance=list(criterion.compliance),
         ))
 
     return criterion_results
@@ -689,6 +695,12 @@ def _run_full_pipeline(
             criterion_type=criterion.criterion_type,
             exclusion_reason=reason if relevance_status == RelevanceStatus.NOT_APPLICABLE else None,
             confidence_reduced=(relevance_status == RelevanceStatus.UNDETERMINED),
+            cost=criterion.cost,
+            operational_overhead=criterion.operational_overhead,
+            severity=criterion.severity,
+            tension=criterion.tension,
+            vectors=list(criterion.vectors),
+            compliance=list(criterion.compliance),
         ))
 
     return criterion_results
@@ -835,6 +847,12 @@ def serialize_result(result: DafmAssessmentResult) -> dict:
                 },
                 "exclusion_reason": cr.exclusion_reason,
                 "confidence_reduced": cr.confidence_reduced,
+                "cost": cr.cost,
+                "operational_overhead": cr.operational_overhead,
+                "severity": cr.severity,
+                "tension": cr.tension,
+                "vectors": cr.vectors,
+                "compliance": cr.compliance,
             })
 
         pillar_dict = {

@@ -31,3 +31,6 @@ dafm_output/
 # Environment / secrets
 .env
 .env.local
+
+# Seed output from scripts/seed_criteria_tags.py
+dafm_config/criteria_tags.seed.yaml

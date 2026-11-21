@@ -12,6 +12,8 @@ Usage:
 """
 from __future__ import annotations
 
+from pathlib import Path
+
 from dafm.models import CriterionDefinition, CriterionType
 
 
@@ -944,6 +946,51 @@ CRITERIA_REGISTRY: list[CriterionDefinition] = (
     + _P8_CRITERIA
     + _P9_CRITERIA
 )
+
+
+# ---------------------------------------------------------------------------
+# Probe-level tags (dafm_config/criteria_tags.yaml)
+# ---------------------------------------------------------------------------
+def _tag_file_candidates() -> list[Path]:
+    """Candidate locations for ``criteria_tags.yaml`` (CWD first, then package root)."""
+    return [
+        Path("dafm_config/criteria_tags.yaml"),
+        Path(__file__).resolve().parent.parent / "dafm_config" / "criteria_tags.yaml",
+    ]
+
+
+def _apply_criteria_tags(criteria: list[CriterionDefinition]) -> None:
+    """Set the taxonomy tag fields on each criterion from criteria_tags.yaml.
+
+    Fails soft: if the file or PyYAML is missing or unreadable, the tag fields
+    keep their empty defaults and nothing is raised.
+    """
+    path = next((c for c in _tag_file_candidates() if c.exists()), None)
+    if path is None:
+        return
+    try:
+        import yaml
+
+        with open(path, "r", encoding="utf-8") as fh:
+            tags = yaml.safe_load(fh) or {}
+    except Exception:
+        return
+    if not isinstance(tags, dict):
+        return
+
+    for criterion in criteria:
+        entry = tags.get(f"{criterion.pillar}.{criterion.index}")
+        if not isinstance(entry, dict):
+            continue
+        criterion.vectors = list(entry.get("vectors") or [])
+        criterion.tension = entry.get("tension") or ""
+        criterion.cost = entry.get("cost") or ""
+        criterion.operational_overhead = entry.get("operational_overhead") or ""
+        criterion.severity = entry.get("severity") or ""
+        criterion.compliance = list(entry.get("compliance") or [])
+
+
+_apply_criteria_tags(CRITERIA_REGISTRY)
 
 
 # ---------------------------------------------------------------------------
