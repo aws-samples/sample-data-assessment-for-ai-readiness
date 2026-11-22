@@ -70,20 +70,26 @@ Resources:
                 Action:
                   - "bedrock:ListFoundationModels"
                   - "bedrock:GetFoundationModel"
-                  - "bedrock-agent:ListKnowledgeBases"
-                  - "bedrock-agent:GetKnowledgeBase"
-                  - "bedrock-agent:ListAgents"
-                  - "bedrock-agent:GetAgent"
+                  - "bedrock:ListKnowledgeBases"
+                  - "bedrock:GetKnowledgeBase"
+                  - "bedrock:ListAgents"
+                  - "bedrock:GetAgent"
                 Resource: "*"
 
               # ─────────────────────────────────────────────────────────────
               # P3: Data Lineage & Provenance
               # ─────────────────────────────────────────────────────────────
-              - Sid: P3NeptuneDescribe
+              # Neptune management calls are authorized under rds: (see P4RDSMetadata).
+              - Sid: P3GlueJobsRead
                 Effect: Allow
                 Action:
-                  - "neptune:DescribeDBClusters"
-                  - "neptune:DescribeDBInstances"
+                  - "glue:ListJobs"
+                Resource: "*"
+
+              - Sid: P3SageMakerLineageRead
+                Effect: Allow
+                Action:
+                  - "sagemaker:ListLineageGroups"
                 Resource: "*"
 
               - Sid: P3OpenSearchRead
@@ -103,6 +109,19 @@ Resources:
                   - "macie2:GetMacieSession"
                   - "macie2:ListClassificationJobs"
                   - "macie2:ListFindings"
+                Resource: "*"
+
+              - Sid: P4GlueDataQualityRead
+                Effect: Allow
+                Action:
+                  - "glue:ListDataQualityRulesets"
+                  - "glue:ListRegistries"
+                Resource: "*"
+
+              - Sid: P4SageMakerMonitoringRead
+                Effect: Allow
+                Action:
+                  - "sagemaker:ListMonitoringSchedules"
                 Resource: "*"
 
               - Sid: P4DynamoDBMetadata
@@ -173,6 +192,13 @@ Resources:
                   - "cloudtrail:DescribeTrails"
                   - "cloudtrail:GetTrailStatus"
                   - "cloudtrail:LookupEvents"
+                  - "cloudtrail:GetEventSelectors"
+                Resource: "*"
+
+              - Sid: P6CostAnomalyRead
+                Effect: Allow
+                Action:
+                  - "ce:GetAnomalyMonitors"
                 Resource: "*"
 
               - Sid: P6ConfigRead
@@ -213,6 +239,7 @@ Resources:
                   - "events:DescribeRule"
                   - "sns:ListTopics"
                   - "sns:GetTopicAttributes"
+                  - "rds:DescribeIntegrations"
                 Resource: "*"
 
               # ─────────────────────────────────────────────────────────────
@@ -224,10 +251,30 @@ Resources:
                   - "lambda:GetFunction"
                   - "lambda:GetPolicy"
                   - "lambda:ListFunctions"
-                  - "apigateway:GetRestApis"
-                  - "apigateway:GetResources"
                   - "appsync:ListGraphqlApis"
                   - "appsync:GetGraphqlApi"
+                Resource: "*"
+
+              - Sid: P8ApiGatewayRead
+                Effect: Allow
+                Action:
+                  - "apigateway:GET"
+                Resource:
+                  - "arn:aws:apigateway:*::/restapis"
+                  - "arn:aws:apigateway:*::/restapis/*"
+
+              - Sid: P8BedrockGuardrailsRead
+                Effect: Allow
+                Action:
+                  - "bedrock:ListGuardrails"
+                Resource: "*"
+
+              - Sid: P8OrganizationsPolicyRead
+                Effect: Allow
+                Action:
+                  # Only returns results from the organization management account
+                  # or a delegated administrator account.
+                  - "organizations:ListPolicies"
                 Resource: "*"
 
               - Sid: P8OrchestrationRead
@@ -255,6 +302,12 @@ Resources:
                 Effect: Allow
                 Action:
                   - "ce:GetCostAndUsage"
+                Resource: "*"
+
+              - Sid: P9BedrockInvocationLoggingRead
+                Effect: Allow
+                Action:
+                  - "bedrock:GetModelInvocationLoggingConfiguration"
                 Resource: "*"
 
               # ─────────────────────────────────────────────────────────────
