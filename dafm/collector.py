@@ -51,15 +51,15 @@ VERSION = "2.3.0"
 
 # Role scope display — maps each pillar to its specific granted actions
 _ROLE_SCOPE_ENTRIES = [
-    ("P1 Agent Access & Discovery", "glue:GetDatabases, glue:GetTables, glue:GetCrawlers, lakeformation:ListResources, lambda:ListFunctions"),
-    ("P2 Semantic Context & Retrieval", "s3:ListAllMyBuckets, bedrock:ListFoundationModels, bedrock-agent:ListKnowledgeBases"),
-    ("P3 Data Lineage & Provenance", "neptune:DescribeDBClusters, es:ListDomainNames, es:DescribeDomains"),
-    ("P4 Data Quality & Classification", "macie2:GetMacieSession, dynamodb:ListTables, rds:DescribeDBInstances, redshift:DescribeClusters"),
-    ("P5 Access Control & Identity", "iam:ListRoles, iam:GetPolicy, cognito-idp:ListUserPools, access-analyzer:ListAnalyzers"),
-    ("P6 Observability & Audit", "cloudtrail:DescribeTrails, cloudtrail:LookupEvents, config:DescribeConfigRules, cloudwatch:DescribeAlarms, xray:GetGroups"),
-    ("P7 Real-Time Freshness", "kinesis:ListStreams, kafka:ListClustersV2, events:ListRules, sns:ListTopics"),
-    ("P8 Agent Controllability", "lambda:ListFunctions, apigateway:GetRestApis, states:ListStateMachines, sagemaker:ListEndpoints"),
-    ("P9 Decision Lineage", "athena:ListWorkGroups, athena:ListDataCatalogs, ce:GetCostAndUsage"),
+    ("P1 Agent Access & Discovery", "glue:GetDatabases, glue:GetTables, glue:GetCrawlers, lakeformation:ListResources, lakeformation:GetDataLakeSettings, lakeformation:ListPermissions, lakeformation:ListLFTags, lambda:ListFunctions, cloudformation:ListStacks"),
+    ("P2 Semantic Context & Retrieval", "s3:ListAllMyBuckets, bedrock:ListFoundationModels, bedrock:ListKnowledgeBases"),
+    ("P3 Data Lineage & Provenance", "glue:ListJobs, sagemaker:ListLineageGroups, es:ListDomainNames"),
+    ("P4 Data Quality & Classification", "macie2:GetMacieSession, glue:ListDataQualityRulesets, glue:ListRegistries, sagemaker:ListMonitoringSchedules, dynamodb:ListTables, rds:DescribeDBInstances, rds:DescribeDBClusters, redshift:DescribeClusters"),
+    ("P5 Access Control & Identity", "iam:ListRoles, cognito-idp:ListUserPools, access-analyzer:ListAnalyzers"),
+    ("P6 Observability & Audit", "cloudtrail:DescribeTrails, cloudtrail:LookupEvents, cloudtrail:GetEventSelectors, ce:GetAnomalyMonitors, config:DescribeConfigRules, cloudwatch:DescribeAlarms, logs:DescribeLogGroups, xray:GetGroups"),
+    ("P7 Real-Time Freshness", "kinesis:ListStreams, kafka:ListClustersV2, events:ListRules, sns:ListTopics, rds:DescribeIntegrations"),
+    ("P8 Agent Controllability", "lambda:ListFunctions, appsync:ListGraphqlApis, apigateway:GET, bedrock:ListGuardrails, organizations:ListPolicies, states:ListStateMachines, sagemaker:ListNotebookInstances"),
+    ("P9 Decision Lineage", "athena:ListWorkGroups, athena:ListDataCatalogs, ce:GetCostAndUsage, bedrock:GetModelInvocationLoggingConfiguration"),
 ]
 
 _SECURITY_NOTE = "Least-privilege: only specific actions granted — no wildcards, no deny needed"
